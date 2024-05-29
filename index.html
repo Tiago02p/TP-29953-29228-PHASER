@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+</head>
+<body>
+
+<script>
+class Example extends Phaser.Scene {
+
+    constructor() {
+        super();
+        this.player1 = null;
+        this.player2 = null;
+        this.groundY = 750; // Ajuste isso para a posição y do chão
+        this.jumpForce = -15; // Força do salto
+        this.onGroundPlayer1 = true;
+        this.onGroundPlayer2 = true;
+    }   
+
+    preload() {
+        this.load.image('player1_frame1', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0_normal.png');
+        this.load.image('player1_frame2', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0.png');
+        this.load.image('player2_frame1', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0_normal.png');
+        this.load.image('player2_frame2', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0.png');
+        this.load.image('background', 'assets/background/transferir.jpg');
+        this.load.image('background2', 'assets/background/2205_w015_n001_820a_p30_820.jpg');
+        this.load.image('obstacle', 'assets/background/vecteezy_platform-with-desert-for-game-level-interface_15008353.png');
+    }
+    
+    create() {
+        // Definir a imagem de fundo
+        this.add.image(0, -300, 'background').setOrigin(0).setScale(6);
+
+        this.ground = this.matter.add.image(700, this.groundY + 25, 'background2').setScale(0.6);
+        this.ground.setStatic(true);
+
+        // Configurar as animações para o jogador 1
+        this.anims.create({
+            key: 'player1_right',
+            frames: [
+                { key: 'player1_frame1' },
+                { key: 'player1_frame2' }
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'player1_left',
+            frames: [
+                { key: 'player1_frame1' },
+                { key: 'player1_frame2' }
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+        // Configurar as animações para o jogador 2
+        this.anims.create({
+            key: 'player2_right',
+            frames: [
+                { key: 'player2_frame1' },
+                { key: 'player2_frame2' }
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'player2_left',
+            frames: [
+                { key: 'player2_frame1' },
+                { key: 'player2_frame2' }
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+        // Criar os jogadores
+        this.player1 = this.matter.add.sprite(300, 300, 'player1_frame1').setScale(0.1);
+        this.player2 = this.matter.add.sprite(400, 300, 'player2_frame1').setScale(0.1);
+
+        // Adicionar a animação inicial aos jogadores
+        this.player1.play('player1_right');
+        this.player2.play('player2_right');
+
+        // Fixar a rotação dos jogadores
+        this.player1.setFixedRotation();
+        this.player2.setFixedRotation();
+
+        // Configurar a corda como um gráfico
+        this.corda = this.add.graphics({ lineStyle: { width: 2, color: 0xff0000 } });
+
+        // Configurar os controles de teclado
+        this.teclas = this.input.keyboard.addKeys('W,A,S,D');
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        // Criar um obstáculo como um corpo físico sólido
+        this.obstacle = this.matter.add.image(1000, this.groundY - 300, 'obstacle').setScale(0.5);
+        this.obstacle.setStatic(true);
+
+        // Criar uma zona de colisão na parte superior do obstáculo
+        this.topCollider = this.matter.add.rectangle(this.obstacle.x, this.obstacle.y - this.obstacle.displayHeight / 2, this.obstacle.displayWidth, 10, {
+            isStatic: true,
+            label: 'topCollider'
+        });
+
+        // Configurar os limites da câmera para acompanhar os jogadores
+        this.cameras.main.setBounds(0, 0, 5600, 650);
+        this.matter.world.setBounds(0, 0, 5600, 650);
+
+        // Adicionar colisões para os jogadores com o chão
+        this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
+            if ((bodyA === this.player1.body && bodyB === this.ground.body) || (bodyB === this.player1.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer1 = true;
+            }
+            if ((bodyA === this.player2.body && bodyB === this.ground.body) || (bodyB === this.player2.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer2 = true;
+            }
+        });
+
+        this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
+            if ((bodyA === this.player1.body && bodyB === this.ground.body) || (bodyB === this.player1.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer1 = false;
+            }
+            if ((bodyA === this.player2.body && bodyB === this.ground.body) || (bodyB === this.player2.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer2 = false;
+            }
+        });
+
+        // Adicionar colisões para os jogadores com o chão e o topo do obstáculo
+        this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
+            if ((bodyA === this.player1.body && bodyB === this.ground.body) || (bodyB === this.player1.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer1 = true;
+            }
+            if ((bodyA === this.player2.body && bodyB === this.ground.body) || (bodyB === this.player2.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer2 = true;
+            }
+            if ((bodyA === this.player1.body && bodyB === this.topCollider) || (bodyB === this.player1.body && bodyA === this.topCollider)) {
+                this.onGroundPlayer1 = true;
+            }
+            if ((bodyA === this.player2.body && bodyB === this.topCollider) || (bodyB === this.player2.body && bodyA === this.topCollider)) {
+                this.onGroundPlayer2 = true;
+            }
+        });
+
+        this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
+            if ((bodyA === this.player1.body && bodyB === this.ground.body) || (bodyB === this.player1.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer1 = false;
+            }
+            if ((bodyA === this.player2.body && bodyB === this.ground.body) || (bodyB === this.player2.body && bodyA === this.ground.body)) {
+                this.onGroundPlayer2 = false;
+            }
+            if ((bodyA === this.player1.body && bodyB === this.topCollider) || (bodyB === this.player1.body && bodyA === this.topCollider)) {
+                this.onGroundPlayer1 = false;
+            }
+            if ((bodyA === this.player2.body && bodyB === this.topCollider) || (bodyB === this.player2.body && bodyA === this.topCollider)) {
+                this.onGroundPlayer2 = false;
+            }
+        });
+    }
+
+    update() {
+        // Atualizara posição da corda
+        this.corda.clear();
+        this.corda.lineStyle(2, 0xff0000);
+        this.corda.beginPath();
+        this.corda.moveTo(this.player1.x, this.player1.y);
+        this.corda.lineTo(this.player2.x, this.player2.y);
+        this.corda.strokePath();
+
+        // A câmera segue o ponto médio entre os jogadores
+        const midPointX = (this.player1.x + this.player2.x) / 2;
+        const midPointY = (this.player1.y + this.player2.y) / 2;
+        this.cameras.main.startFollow({ x: midPointX, y: midPointY });
+
+        // Verificar a distância entre os jogadores
+        const distance = Phaser.Math.Distance.Between(this.player1.x, this.player1.y, this.player2.x, this.player2.y);
+        const maxDistance = 150; // Distância máxima permitida
+
+        // Aplicar força para puxar os jogadores de volta se estiverem muito distantes
+        if (distance > maxDistance) {
+            const forceX = (this.player2.x - this.player1.x) * 0.00009;
+            const forceY = (this.player2.y - this.player1.y) * 0.00009;
+            this.player1.applyForce({ x: forceX, y: forceY });
+            this.player2.applyForce({ x: -forceX, y: -forceY });
+        }
+
+        // Controles de movimento do jogador 1
+        if (this.teclas.A.isDown) {
+            this.player1.setVelocityX(-2);
+            if (this.player1.anims.currentAnim.key !== 'player1_left') {
+                this.player1.play('player1_left');
+            }
+        } else if (this.teclas.D.isDown) {
+            this.player1.setVelocityX(2);
+            if (this.player1.anims.currentAnim.key !== 'player1_right') {
+                this.player1.play('player1_right');
+            }
+        } else {
+            this.player1.setVelocityX(0);
+            this.player1.anims.stop(); // Parar animação quando parado
+        }
+
+        if (this.teclas.S.isDown) {
+            this.player1.setVelocityY(2);
+        }
+
+        // Controles de movimento do jogador 2
+        if (this.cursors.left.isDown) {
+            this.player2.setVelocityX(-2); 
+            if (this.player2.anims.currentAnim.key !== 'player2_left') {
+                this.player2.play('player2_left');
+            }
+        } else if (this.cursors.right.isDown) {
+            this.player2.setVelocityX(2); 
+            if (this.player2.anims.currentAnim.key !== 'player2_right') {
+                this.player2.play('player2_right');
+            }
+        } else {
+            this.player2.setVelocityX(0);
+            this.player2.anims.stop(); // Parar animação quando parado
+        }
+
+        if (this.cursors.down.isDown) {
+            this.player2.setVelocityY(2); // Move para baixo
+        }
+
+        // Verificação de salto para jogador 1
+        if (Phaser.Input.Keyboard.JustDown(this.teclas.W) && this.onGroundPlayer1) {
+            this.player1.setVelocityY(this.jumpForce);
+            this.onGroundPlayer1 = false;
+        }
+
+        // Verificação de salto para jogador 2
+        if (Phaser.Input.Keyboard.JustDown(this.cursors.up) && this.onGroundPlayer2) {
+            this.player2.setVelocityY(this.jumpForce);
+            this.onGroundPlayer2 = false;
+        }
+    }
+}
+
+const config = {
+    type: Phaser.AUTO,
+    width: 1500,
+    height: 650,
+    scene: Example,
+    physics: {
+        default: 'matter',
+        matter: {
+            gravity: { y: 1.5 },
+            bounds: {
+                x: 0,
+                y: 0,
+                width: 1400,
+                height: 650
+            }
+        }
+    },
+};
+
+const game = new Phaser.Game(config);
+</script>
+
+</body>
+</html>
