@@ -13,15 +13,15 @@ class Example extends Phaser.Scene {
         this.player1 = null;
         this.player2 = null;
         this.groundY = 750; // Ajuste isso para a posição y do chão
-        this.jumpForce = -20; // Força do salto
+        this.jumpForce = -12; // Força do salto
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
     } 
 
     preload() {
-        this.load.image('player1_frame1', 'assets/player/1.png');
+        this.load.image('player1_frame1', 'assets/player/player1.png');
         this.load.image('player1_frame2', 'assets/player/2.png');
-        this.load.image('player2_frame1', 'assets/player/1.png');
+        this.load.image('player2_frame1', 'assets/player/player2.png');
         this.load.image('player2_frame2', 'assets/player/2.png');
         this.load.image('background', 'assets/background/transferir.jpg');
         this.load.image('background2', 'assets/background/2205_w015_n001_820a_p30_820.jpg');
@@ -82,8 +82,8 @@ class Example extends Phaser.Scene {
         const player2Category = this.matter.world.nextCategory();
 
         // Criar os jogadores
-        this.player1 = this.matter.add.sprite(300, 300, 'player1_frame1').setScale(0.25);
-        this.player2 = this.matter.add.sprite(400, 300, 'player2_frame1').setScale(0.25);
+        this.player1 = this.matter.add.sprite(300, 300, 'player1_frame1').setScale(0.1);
+        this.player2 = this.matter.add.sprite(400, 300, 'player2_frame1').setScale(0.1);
 
         // Aplicar categorias e máscaras de colisão
         this.player1.setCollisionCategory(player1Category);
@@ -101,7 +101,7 @@ class Example extends Phaser.Scene {
         this.player2.setFixedRotation();
 
         // Configurar a corda como um gráfico
-        this.corda = this.add.graphics({ lineStyle: { width: 2, color: 0xff0000 } });
+        this.corda = this.add.graphics({ lineStyle: { width: 1, color: 0xff0000 } });
 
         // Configurar os controles de teclado
         this.teclas = this.input.keyboard.addKeys('W,A,S,D');
@@ -161,24 +161,24 @@ class Example extends Phaser.Scene {
 
         // Verificar a distância entre os jogadores
         const distance = Phaser.Math.Distance.Between(this.player1.x, this.player1.y, this.player2.x, this.player2.y);
-        const maxDistance = 180; // Distância máxima permitida
+        const maxDistance = 200; // Distância máxima permitida
 
         // Aplicar força para puxar os jogadores de volta se estiverem muito distantes
         if (distance > maxDistance) {
-            const forceX = (this.player2.x - this.player1.x) * 0.00009;
-            const forceY = (this.player2.y - this.player1.y) * 0.00009;
+            const forceX = (this.player2.x - this.player1.x) * 0.000016;
+            const forceY = (this.player2.y - this.player1.y) * 0.000016;
             this.player1.applyForce({ x: forceX, y: forceY });
             this.player2.applyForce({ x: -forceX, y: -forceY });
         }
 
         // Controles de movimento do jogador 1
         if (this.teclas.A.isDown) {
-            this.player1.setVelocityX(-2);
+            this.player1.setVelocityX(-2.3);
             if (this.player1.anims.currentAnim.key !== 'player1_left') {
                 this.player1.play('player1_left');
             }
         } else if (this.teclas.D.isDown) {
-            this.player1.setVelocityX(2);
+            this.player1.setVelocityX(2.3);
             if (this.player1.anims.currentAnim.key !== 'player1_right') {
                 this.player1.play('player1_right');
             }
@@ -188,17 +188,17 @@ class Example extends Phaser.Scene {
         }
 
         if (this.teclas.S.isDown) {
-            this.player1.setVelocityY(2);
+            this.player1.setVelocityY(2.3);
         }
 
         // Controles de movimento do jogador 2
         if (this.cursors.left.isDown) {
-            this.player2.setVelocityX(-2); 
+            this.player2.setVelocityX(-2.3); 
             if (this.player2.anims.currentAnim.key !== 'player2_left') {
                 this.player2.play('player2_left');
             }
         } else if (this.cursors.right.isDown) {
-            this.player2.setVelocityX(2); 
+            this.player2.setVelocityX(2.3); 
             if (this.player2.anims.currentAnim.key !== 'player2_right') {
                 this.player2.play('player2_right');
             }
@@ -208,7 +208,7 @@ class Example extends Phaser.Scene {
         }
 
         if (this.cursors.down.isDown) {
-            this.player2.setVelocityY(2); // Move para baixo
+            this.player2.setVelocityY(2.3); // Move para baixo
         }
 
         // Verificação de salto para jogador 1
@@ -233,7 +233,7 @@ const config = {
     physics: {
         default: 'matter',
         matter: {
-            gravity: { y: 1.5 },
+            gravity: { y: 0.4 },
             bounds: {
                 x: 0,
                 y: 0,
