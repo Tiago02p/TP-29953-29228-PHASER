@@ -19,10 +19,10 @@ class Example extends Phaser.Scene {
     }   
 
     preload() {
-        this.load.image('player1_frame1', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0_normal.png');
-        this.load.image('player1_frame2', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0.png');
-        this.load.image('player2_frame1', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0_normal.png');
-        this.load.image('player2_frame2', 'assets/Faction10-Spacestations-by-MillionthVector/tribase-u3-d0.png');
+        this.load.image('player1_frame1', 'assets/player/1.png');
+        this.load.image('player1_frame2', 'assets/player/2.png');
+        this.load.image('player2_frame1', 'assets/player/1.png');
+        this.load.image('player2_frame2', 'assets/player/2.png');
         this.load.image('background', 'assets/background/transferir.jpg');
         this.load.image('background2', 'assets/background/2205_w015_n001_820a_p30_820.jpg');
         this.load.image('obstacle', 'assets/background/vecteezy_platform-with-desert-for-game-level-interface_15008353.png');
@@ -78,8 +78,8 @@ class Example extends Phaser.Scene {
         });
 
         // Criar os jogadores
-        this.player1 = this.matter.add.sprite(300, 300, 'player1_frame1').setScale(0.1);
-        this.player2 = this.matter.add.sprite(400, 300, 'player2_frame1').setScale(0.1);
+        this.player1 = this.matter.add.sprite(300, 300, 'player1_frame1').setScale(0.25);
+        this.player2 = this.matter.add.sprite(400, 300, 'player2_frame1').setScale(0.25);
 
         // Adicionar a animação inicial aos jogadores
         this.player1.play('player1_right');
