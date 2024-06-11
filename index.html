@@ -221,6 +221,7 @@ class Example extends Phaser.Scene {
         // Verificar a distância entre os jogadores
         const distance = Phaser.Math.Distance.Between(this.player1.x, this.player1.y, this.player2.x, this.player2.y);
         const maxDistance = 200; // Distância máxima permitida
+        const maxDistance = 200; // Distância máxima permitida
 
         // Aplicar força para puxar os jogadores de volta se estiverem muito distantes
         if (distance > maxDistance) {
