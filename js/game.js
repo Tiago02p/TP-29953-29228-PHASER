@@ -1,6 +1,21 @@
-class Example extends Phaser.Scene {
+import TutorialScene from './tutorial.js';
+
+class MenuScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'Example' });
+        super({ key: 'MenuScene' });
+    }
+
+    preload() {
+        this.load.image('menuBg', 'assets/background/wallpaperflare.com_wallpaper.jpg');
+    }
+
+    create() {
+        this.add.image(-1800, -1200, 'menuBg').setOrigin(0).setScale(0.9);
+    }
+}
+class GameScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'GameScene' });
         this.player1 = null;
         this.player2 = null;
         this.groundY = 750;
@@ -249,11 +264,12 @@ class Example extends Phaser.Scene {
     }
 }
 
+
 const config = {
     type: Phaser.AUTO,
     width: 1500,
     height: 650,
-    scene: Example,
+    scene: [MenuScene, GameScene, TutorialScene],
     physics: {
         default: 'matter',
         matter: {
