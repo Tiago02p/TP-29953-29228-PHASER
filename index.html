@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beaks & Wings</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
-    <script src="js/game.js" type="module" defer></script>
-    <script src="js/main.js" type="module" defer></script>
-    <script src="js/tutorial.js" type="module" defer></script>
+    <script src="js/main.js" defer></script>
     <style>
         body {
             background-color: black;
@@ -36,7 +37,9 @@
         #title {
             font-size: 80px;
             margin-bottom: 40px;
-            color: white;
+            color: rgb(0, 187, 255);
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
         button {
             display: block;
@@ -61,6 +64,7 @@
     </style>
 </head>
 <body>
+    <div id="gameContainer"></div>
     <div id="menu" class="active">
         <div id="title">Beaks & Wings</div>
         <button id="playButton">Play</button>
@@ -73,6 +77,5 @@
         <p>Use as setas para mover o Player 2</p>
         <button id="backToMenuButton">Back to Menu</button>
     </div>
-    <div id="gameContainer"></div>
 </body>
 </html>
