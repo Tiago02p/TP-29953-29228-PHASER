@@ -81,6 +81,7 @@ class GameScene extends Phaser.Scene {
         this.obstacles = [];
         this.topColliders = [];
         this.grabDistance = 100;
+        this.backgroundTransition = null;
     }
 
     preload() {
@@ -88,19 +89,18 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('playerB', 'assets/player/ChikBoy_run.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('playerC', 'assets/player2/ChikBoy_idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('playerD', 'assets/player2/ChikBoy_run.png', { frameWidth: 32, frameHeight: 32 });
-
-        this.load.image('background4', 'assets/background/the end.jpg');
+        this.load.image('ceuazul', 'assets/background/ceuazul.png');
         this.load.image('background3', 'assets/background/Escada para o céu _ Foto Premium.jpg');
         this.load.image('background', 'assets/background/wallpaperflare.com_wallpaper.jpg');
         this.load.image('background2', 'assets/background/2205_w015_n001_820a_p30_820.jpg');
         this.load.image('obstacle', 'assets/background/vecteezy_platform-with-desert-for-game-level-interface_15008353.png');
         this.load.image('wall', 'assets/background/wall.jpg');
+        this.load.image('background4', 'assets/background/wall.jpg');
+        this.load.image('menuBg', 'assets/background/menuBg.jpg');
     }
 
     create() {
-        this.add.image(0, -1200, 'background').setOrigin(0).setScale(1);
-        this.add.image(0, -2200, 'background3').setOrigin(0).setScale(6);
-
+        this.add.image(0, 0, 'menuBg').setOrigin(200).setScale(1.6); // Define a posição e escala conforme necessário
         this.ground = this.matter.add.image(700, this.groundY + 125, 'background2').setScale(1.1);
         this.ground.setStatic(true);
 
@@ -132,6 +132,7 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
+        
         const player1Category = this.matter.world.nextCategory();
         const player2Category = this.matter.world.nextCategory();
 
@@ -163,9 +164,8 @@ class GameScene extends Phaser.Scene {
         loadObstacles.call(this, this);
         loadWall.call(this, this);
 
-        this.cameras.main.setBounds(0, this.game.config.height - 3600, 3000, 3600);
-        this.matter.world.setBounds(0, this.game.config.height - 3600, 3000, 3600);
-
+        this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
+        this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
 
         this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
@@ -310,6 +310,7 @@ class GameScene extends Phaser.Scene {
 
 function loadObstacles(scene) {
     const obstaclePositions = [
+        // Posições adicionais de obstáculos
         { x: 500, y: scene.groundY - 400 },
         { x: 700, y: scene.groundY - 650 },
         { x: 1000, y: scene.groundY - 600 },
@@ -325,6 +326,21 @@ function loadObstacles(scene) {
         { x: 400, y: scene.groundY - 1050 },
         { x: 1500, y: scene.groundY - 1650 },
         { x: 1500, y: scene.groundY - 1950 },
+
+        // Novos obstáculos adicionados
+        { x: 800, y: scene.groundY - 1350 },
+        { x: 1200, y: scene.groundY - 1450 },
+        { x: 1600, y: scene.groundY - 1550 },
+        { x: 2000, y: scene.groundY - 1650 },
+        { x: 2400, y: scene.groundY - 1750 },
+        { x: 1200, y: scene.groundY - 2050 },
+        { x: 1800, y: scene.groundY - 2150 },
+        { x: 600, y: scene.groundY - 2250 },
+        { x: 1400, y: scene.groundY - 2350 },
+        { x: 2000, y: scene.groundY - 2450 },
+        { x: 1000, y: scene.groundY - 2750 },
+        { x: 1600, y: scene.groundY - 2850 },
+        { x: 2200, y: scene.groundY - 2950 },
     ];
 
     obstaclePositions.forEach(pos => {
@@ -340,9 +356,16 @@ function loadObstacles(scene) {
     });
 }
 
+
 function loadWall(scene) {
+    // Ajuste da posição da parede
     scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
+
+    // Adicionando mais paredes se necessário
+    let wall2 = scene.matter.add.image(1500, scene.groundY - 2000, 'wall').setScale(0.6).setStatic(true);
+    let wall3 = scene.matter.add.image(2000, scene.groundY - 2800, 'wall').setScale(0.6).setStatic(true);
 }
+
 
 class TutorialScene extends Phaser.Scene {
     constructor() {
