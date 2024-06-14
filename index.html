@@ -7,10 +7,18 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <script src="js/main.js" defer></script>
     <style>
+        @font-face {
+            font-family: 'AmaticSC-Regular';
+            src: url('assets/fonts/AmaticSC-Regular.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Amatic-Bold';
+            src: url('assets/fonts/Amatic-Bold.ttf') format('truetype');
+        }
         body {
             background-color: black;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'AmaticSC-Regular', Arial, sans-serif;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -34,31 +42,41 @@
         #menu.active, #tutorial.active, #gameContainer.active {
             display: flex;
         }
-        #title {
-            font-size: 80px;
+        #menu, #tutorial {
+            background-image: url('assets/background/menuBg.jpg'); /* Ajuste o caminho conforme necessário */
+            background-size: cover;
+            background-position: center;
+        }
+        #title, #tutorialTitle {
+            font-size: 150px;
             margin-bottom: 40px;
-            color: rgb(0, 187, 255);
+            color: rgb(255, 255, 255);
             font-weight: bold;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-family: 'Amatic-Bold', 'Arial Narrow', Arial, sans-serif;
         }
         button {
             display: block;
             margin: 10px auto;
             padding: 10px 20px;
-            font-size: 40px;
+            font-size: 60px;
             cursor: pointer;
-            background-color: #0400ff;
-            color: white;
+            background-color: #00056d;
+            color: rgb(255, 255, 255);
             border: none;
             border-radius: 10px;
             transition: background-color 0.3s;
+            font-family: 'AmaticSC-Regular', Arial, sans-serif;
         }
         button:hover {
             background-color: #00ff00;
-            color: black;
+            color: rgb(0, 0, 0);
         }
         #quitButton:hover {
             background-color: #ff0000;
+            color: black;
+        }
+        #tutorialButton:hover {
+            background-color: #ffea00;
             color: black;
         }
     </style>

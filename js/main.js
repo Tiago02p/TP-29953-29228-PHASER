@@ -61,11 +61,11 @@ class MenuScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('menuBg', 'assets/background/wallpaperflare.com_wallpaper.jpg');
+        this.load.image('menuBg', 'assets/background/menuBg.jpg');
     }
 
     create() {
-        this.add.image(-1800, -1200, 'menuBg').setOrigin(0).setScale(0.9);
+        this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'menuBg').setOrigin(0.5).setScale(1.2);
     }
 }
 
@@ -359,40 +359,4 @@ class TutorialScene extends Phaser.Scene {
             this.scene.start('MenuScene');
         });
     }
-}
-
-function loadObstacles(scene) {
-    const obstaclePositions = [
-        { x: 500, y: scene.groundY - 400 },
-        { x: 700, y: scene.groundY - 650 },
-        { x: 1000, y: scene.groundY - 600 },
-        { x: 1300, y: scene.groundY - 500 },
-        { x: 1600, y: scene.groundY - 600 },
-        { x: 1900, y: scene.groundY - 550 },
-        { x: 2200, y: scene.groundY - 600 },
-        { x: 2000, y: scene.groundY - 800 },
-        { x: 1700, y: scene.groundY - 900 },
-        { x: 1600, y: scene.groundY - 1050 },
-        { x: 1500, y: scene.groundY - 1150 },
-        { x: 1000, y: scene.groundY - 1050 },
-        { x: 400, y: scene.groundY - 1050 },
-        { x: 1500, y: scene.groundY - 1650 },
-        { x: 1500, y: scene.groundY - 1950 },
-    ];
-
-    obstaclePositions.forEach(pos => {
-        let obstacle = scene.matter.add.image(pos.x, pos.y, 'obstacle').setScale(0.5);
-        obstacle.setStatic(true);
-        scene.obstacles.push(obstacle);
-
-        let topCollider = scene.matter.add.rectangle(obstacle.x, obstacle.y - obstacle.displayHeight / 2, obstacle.displayWidth, 10, {
-            isStatic: true,
-            label: 'topCollider'
-        });
-        scene.topColliders.push(topCollider);
-    });
-}
-
-function loadWall(scene) {
-    scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
 }
