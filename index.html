@@ -79,6 +79,37 @@
             background-color: #ffea00;
             color: black;
         }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-bottom: 20px; /* reduzindo a margem inferior */
+            margin-top: 20px; /* adicionando margem superior */
+        }
+        .controls div {
+            text-align: center;
+        }
+        .controls canvas {
+            margin-bottom: 20px;
+        }
+        .controls p {
+            font-size: 40px;
+            font-weight: bolder;
+            color: black;
+        }
+        .playerContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 128px; /* ajuste conforme necessário */
+            height: 128px; /* ajuste conforme necessário */
+        }
+
+        .playerContainer img {
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -91,8 +122,24 @@
     </div>
     <div id="tutorial">
         <div id="tutorialTitle">Tutorial</div>
-        <p>Use W, A, S, D para mover o Player 1</p>
-        <p>Use as setas para mover o Player 2</p>
+        <div class="controls">
+            <div>
+                <p>A, D para mover</p>
+                <p>W para saltar</p>
+                <p>S para baixar/planar</p>
+            </div>
+            <div class="playerContainer">
+                <img id="player1Img" src="assets/player/ChikBoy_image.png" alt="Player 1">
+            </div>
+            <div class="playerContainer">
+                <img id="player2Img" src="assets/player2/ChikBoy_image2.png" alt="Player 2">
+            </div>
+            <div>
+                <p>Setas para mover</p>
+                <p>↑ para saltar</p>
+                <p>↓ para baixar/planar</p>
+            </div>
+        </div>
         <button id="backToMenuButton">Back to Menu</button>
     </div>
 </body>

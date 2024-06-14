@@ -344,16 +344,12 @@ function loadWall(scene) {
     scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
 }
 
-
 class TutorialScene extends Phaser.Scene {
     constructor() {
         super({ key: 'TutorialScene' });
     }
 
     create() {
-        this.add.text(100, 100, 'Use W, A, S, D para mover o Player 1', { fontSize: '32px', fill: '#FFF' });
-        this.add.text(100, 200, 'Use as setas para mover o Player 2', { fontSize: '32px', fill: '#FFF' });
-
         const backToMenuButton = this.add.text(100, 300, 'Back to Menu', { fontSize: '32px', fill: '#FFF' }).setInteractive();
         backToMenuButton.on('pointerdown', () => {
             this.scene.start('MenuScene');
