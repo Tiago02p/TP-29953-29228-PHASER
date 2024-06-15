@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     playButton.addEventListener('click', () => {
         showSection(gameContainer);
+        game.scene.stop('MenuScene');
         game.scene.start('GameScene');
     });
 
@@ -97,6 +98,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('wall', 'assets/background/wall.jpg');
         this.load.image('background4', 'assets/background/wall.jpg');
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
+        this.load.image('rope', 'assets/rope.png'); 
     }
 
     create() {
@@ -151,7 +153,7 @@ class GameScene extends Phaser.Scene {
         this.player1.setFixedRotation();
         this.player2.setFixedRotation();
 
-        this.corda = this.add.graphics({ lineStyle: { width: 2, color: 0xff0000 } });
+        this.corda = this.add.graphics();
 
         this.teclas = this.input.keyboard.addKeys('W,A,S,D,E');
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -310,7 +312,6 @@ class GameScene extends Phaser.Scene {
 
 function loadObstacles(scene) {
     const obstaclePositions = [
-        // Posições adicionais de obstáculos
         { x: 500, y: scene.groundY - 400 },
         { x: 700, y: scene.groundY - 650 },
         { x: 1000, y: scene.groundY - 600 },
@@ -365,7 +366,6 @@ function loadWall(scene) {
     let wall2 = scene.matter.add.image(1500, scene.groundY - 2000, 'wall').setScale(0.6).setStatic(true);
     let wall3 = scene.matter.add.image(2000, scene.groundY - 2800, 'wall').setScale(0.6).setStatic(true);
 }
-
 
 class TutorialScene extends Phaser.Scene {
     constructor() {
