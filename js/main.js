@@ -109,13 +109,11 @@ class GameScene extends Phaser.Scene {
         this.load.image('bloco_deserto', 'assets/background/bloco_deserto.png');
         this.load.image('bloco_ceu', 'assets/background/bloco_ceu.png');
         this.load.image('bloco_espaco', 'assets/background/bloco_espaço.png');
-        // this.load.image('wall', 'assets/background/wall.jpg'); // Removendo o carregamento da parede
+        this.load.spritesheet('desert_blob', 'assets/enemys/desert_blob.png', { frameWidth: 19, frameHeight: 20 });
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
-        this.load.image('rope', 'assets/rope.png'); 
     }
 
     create() {
-        // Definir a imagem de fundo
         this.add.image(0, -2100, 'background').setOrigin(0).setScale(1);
         
 
@@ -125,7 +123,7 @@ class GameScene extends Phaser.Scene {
         this.anims.create({
             key: 'idle',
             frames: this.anims.generateFrameNumbers('playerA', { start: 0, end: 5 }),
-            frameRate: 3,
+            frameRate: 8,
             repeat: -1
         });
 
@@ -139,7 +137,7 @@ class GameScene extends Phaser.Scene {
         this.anims.create({
             key: 'idle2',
             frames: this.anims.generateFrameNumbers('playerC', { start: 0, end: 5 }),
-            frameRate: 3,
+            frameRate: 8,
             repeat: -1
         });
 
@@ -175,16 +173,15 @@ class GameScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.bloco_desertos = [];
-        this.bloco_ceus= [];
+        this.bloco_ceus = [];
         this.bloco_espacos = [];
         this.topColliders = [];
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
 
         loadbloco_desertos.call(this, this);
-        loadbloco_ceus.call(this,this);
-        loadbloco_espacos.call(this,this);
-        // loadWall.call(this, this); // Removendo a chamada para carregar a parede
+        loadbloco_ceus.call(this, this);
+        loadbloco_espacos.call(this, this);
 
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
@@ -225,14 +222,6 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
             this.onGroundPlayer2 = true;
         }
-
-        // Removendo as verificações de colisão com a parede
-        // if ((bodyA === this.player1.body && bodyB === this.wall.body) || (bodyB === this.player1.body && bodyA === this.wall.body)) {
-        //     this.grabPlayer(this.player1);
-        // }
-        // if ((bodyA === this.player2.body && bodyB === this.wall.body) || (bodyB === this.player2.body && bodyA === this.wall.body)) {
-        //     this.grabPlayer(this.player2);
-        // }
     }
 
     handleCollisionEnd(event, bodyA, bodyB) {
@@ -431,10 +420,3 @@ function loadbloco_espacos(scene) {
         scene.topColliders.push(topCollider);
     });
 }
-
-// function loadWall(scene) {
-//     // Ajuste da posição da parede
-//     scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
-
-//     // Adicionando mais paredes se necessário
-// }
