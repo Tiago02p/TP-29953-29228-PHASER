@@ -109,14 +109,11 @@ class GameScene extends Phaser.Scene {
         this.load.image('bloco_deserto', 'assets/background/bloco_deserto.png');
         this.load.image('bloco_ceu', 'assets/background/bloco_ceu.png');
         this.load.image('bloco_espaco', 'assets/background/bloco_espaço.png');
-        this.load.spritesheet('desert_blob', 'assets/enemys/desert_blob.png', { frameWidth: 19, frameHeight: 20 });
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
     }
 
     create() {
         this.add.image(0, -2100, 'background').setOrigin(0).setScale(1);
-        
-
         this.ground = this.matter.add.image(700, this.groundY + 125, 'background2').setScale(1.1);
         this.ground.setStatic(true);
 
@@ -148,7 +145,6 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
-        
         const player1Category = this.matter.world.nextCategory();
         const player2Category = this.matter.world.nextCategory();
 
@@ -320,18 +316,6 @@ class GameScene extends Phaser.Scene {
             }
         }
     }
-
-    isNearWall(player) {
-        const distance = Phaser.Math.Distance.Between(player.x, player.y, this.wall.x, this.wall.y);
-        return distance < this.grabDistance;
-    }
-
-    grabPlayer(player) {
-        player.setStatic(true); // Fixa o jogador na parede
-        this.time.delayedCall(3000, () => { // Aguarda 3 segundos
-            player.setStatic(false); // Desfixa o jogador da parede
-        });
-    }
 }
 
 function loadbloco_desertos(scene) {
@@ -339,22 +323,30 @@ function loadbloco_desertos(scene) {
         { x: 500, y: scene.groundY - 400 },
         { x: 700, y: scene.groundY - 650 },
         { x: 1000, y: scene.groundY - 600 },
-
-        //Enemy de areia nesta plataforma
         { x: 1300, y: scene.groundY - 500 },
-
         { x: 1600, y: scene.groundY - 600 },
         { x: 1900, y: scene.groundY - 550 },
         { x: 2200, y: scene.groundY - 600 },
 
-        //decidir caminho Aqui
+        //Decidir caminho Aqui
         { x: 2500, y: scene.groundY - 800 },
 
-        //Caminho1
+        //Caminho1 PORTAL
         { x: 2900, y: scene.groundY - 900 },
 
-        //Caminho2
-        { x: 2100, y: scene.groundY - 900 },
+       
+
+        //Caminho2 FAKE
+        { x: 2400, y: scene.groundY - 1100 },
+
+        //ESTE É O BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
+        { x: 2600, y: scene.groundY - 1300 },
+        
+
+         //Caminho3 DECIDIR NOVAMENTE
+         { x: 2100, y: scene.groundY - 900 },
+
+
         { x: 1600, y: scene.groundY - 1050 },
         { x: 1500, y: scene.groundY - 1150 },
         { x: 1000, y: scene.groundY - 1050 },
@@ -375,10 +367,16 @@ function loadbloco_desertos(scene) {
     });
 }
 
-
 function loadbloco_ceus(scene) {
     const bloco_ceuPositions = [
         //Posições dos obstaculos brancos
+
+
+        // Caminho FAKE
+        { x: 2900, y: scene.groundY - 1500 },
+        { x: 2600, y: scene.groundY - 1700 },
+
+
         { x: 500, y: scene.groundY - 1100 },
         { x: 700, y: scene.groundY - 1250 },
         { x: 900, y: scene.groundY - 1500 },
