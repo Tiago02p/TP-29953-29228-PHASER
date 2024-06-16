@@ -331,27 +331,21 @@ function loadbloco_desertos(scene) {
         //Decidir caminho Aqui
         { x: 2500, y: scene.groundY - 800 },
 
-        //Caminho1 PORTAL
+        //Caminho1 PORTAL X LEVA A PORTAL Y (SOBE)
         { x: 2900, y: scene.groundY - 900 },
 
-       
-
-        //Caminho2 FAKE
+        //Caminho2 até ao BLOCO FALSO
         { x: 2400, y: scene.groundY - 1100 },
 
-        //ESTE É O BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
-        { x: 2700, y: scene.groundY - 1300 },
+        //BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
+        //É como um bloco de deserto fantasma na Posição { x: 2700, y: scene.groundY - 1300 },
         
 
-         //Caminho3 DECIDIR NOVAMENTE
-         { x: 2100, y: scene.groundY - 900 },
-
-
-        { x: 1600, y: scene.groundY - 1050 },
+         //Caminho3 
+        { x: 2100, y: scene.groundY - 900 },
+        { x: 1800, y: scene.groundY - 1050 },
         { x: 1500, y: scene.groundY - 1150 },
-        { x: 1000, y: scene.groundY - 1050 },
-        { x: 400, y: scene.groundY - 1050 }
-        
+        { x: 900, y: scene.groundY - 1050 },
     ];
 
     bloco_desertoPositions.forEach(pos => {
@@ -374,20 +368,28 @@ function loadbloco_desertos(scene) {
 
 function loadbloco_ceus(scene) {
     const bloco_ceuPositions = [
-        //Posições dos obstaculos brancos
+        //Caminho Normal
+        { x: 450, y: scene.groundY - 1100 },
 
+        //Caminho para PORTAL Y LIGA A PORTAL X (DESCE)
+        { x: 200, y: scene.groundY - 1300 },
+        { x: 10, y: scene.groundY - 1300 },
 
-        // Caminho FAKE
-        { x: 2900, y: scene.groundY - 1500 },
-        { x: 2600, y: scene.groundY - 1700 },
+        { x: 400, y: scene.groundY - 1500 },
+        //Decisao
+        { x: 700, y: scene.groundY - 1600 },
 
+        //cAMINHO PORTAL Z
+        { x: 400, y: scene.groundY - 1800},
+        { x: 100, y: scene.groundY - 2000},
 
-        { x: 500, y: scene.groundY - 1100 },
-        { x: 700, y: scene.groundY - 1250 },
-        { x: 900, y: scene.groundY - 1500 },
+        //cAMINHO Certo
         { x: 1100, y: scene.groundY - 1650 },
-        { x: 1300, y: scene.groundY - 1800 },
-        { x: 1500, y: scene.groundY - 1950 },
+        { x: 1400, y: scene.groundY - 1800 },
+        { x: 1700, y: scene.groundY - 1600 },
+        { x: 2100, y: scene.groundY - 1700 },
+        { x: 2900, y: scene.groundY - 1500 },
+        { x: 2600, y: scene.groundY - 1750 },
         
     ];
 
@@ -407,8 +409,40 @@ function loadbloco_ceus(scene) {
 function loadbloco_espacos(scene) {
     const bloco_espacoPositions = [
         //Posições dos obstaculos pretos
-        { x: 1500, y: scene.groundY - 2100 },
-        { x: 1900, y: scene.groundY - 2120 },
+        { x: 2900, y: scene.groundY - 2000 },
+        { x: 2550, y: scene.groundY - 2050 },
+
+        //Decidir
+        { x: 2200, y: scene.groundY - 2200 },
+
+        //Posição do PORTAL VITORIA 1 REDIRECT PARA PORTAL Y(FAKE)
+        { x: 2400, y: scene.groundY - 2470 },
+        { x: 2750, y: scene.groundY - 2370 },
+
+
+        //caminho certo
+        { x: 1900, y: scene.groundY - 2050 },
+        { x: 1600, y: scene.groundY - 2170 },
+
+        //Decidir2
+        { x: 1200, y: scene.groundY - 2350 },
+        
+
+        { x: 900, y: scene.groundY - 2150 },
+        //BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
+        //É como um bloco de espaço fantasma na Posição { x: 500, y: scene.groundY - 2100 },
+        
+
+        { x: 1400, y: scene.groundY - 2350 },
+
+        //Esta Posição do será a posição do PORTAL VITORIA 2 REDIRECT PARA PORTAL Y(FAKE)
+        { x: 1500, y: scene.groundY - 2650 },
+
+        //Esta Posição do será a posição do PORTAL VITORIA 2 REDIRECT PARA PORTAL Y(FAKE)
+        { x: 1200, y: scene.groundY - 2650 },
+
+
+
     ];
 
     bloco_espacoPositions.forEach(pos => {
