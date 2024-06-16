@@ -340,7 +340,7 @@ function loadbloco_desertos(scene) {
         { x: 2400, y: scene.groundY - 1100 },
 
         //ESTE É O BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
-        { x: 2600, y: scene.groundY - 1300 },
+        { x: 2700, y: scene.groundY - 1300 },
         
 
          //Caminho3 DECIDIR NOVAMENTE
@@ -355,15 +355,20 @@ function loadbloco_desertos(scene) {
     ];
 
     bloco_desertoPositions.forEach(pos => {
-        let bloco_deserto = scene.matter.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
-        bloco_deserto.setStatic(true);
-        scene.bloco_desertos.push(bloco_deserto);
+        if (pos.x === 2600 && pos.y === scene.groundY - 1300) {
+            // Bloco fantasma
+            scene.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
+        } else {
+            let bloco_deserto = scene.matter.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
+            bloco_deserto.setStatic(true);
+            scene.bloco_desertos.push(bloco_deserto);
 
-        let topCollider = scene.matter.add.rectangle(bloco_deserto.x, bloco_deserto.y - bloco_deserto.displayHeight / 2, bloco_deserto.displayWidth, 10, {
-            isStatic: true,
-            label: 'topCollider'
-        });
-        scene.topColliders.push(topCollider);
+            let topCollider = scene.matter.add.rectangle(bloco_deserto.x, bloco_deserto.y - bloco_deserto.displayHeight / 2, bloco_deserto.displayWidth, 10, {
+                isStatic: true,
+                label: 'topCollider'
+            });
+            scene.topColliders.push(topCollider);
+        }
     });
 }
 
