@@ -91,18 +91,19 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('playerC', 'assets/player2/ChikBoy_idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('playerD', 'assets/player2/ChikBoy_run.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('ceuazul', 'assets/background/ceuazul.png');
-        this.load.image('background3', 'assets/background/Escada para o céu _ Foto Premium.jpg');
-        this.load.image('background', 'assets/background/wallpaperflare.com_wallpaper.jpg');
+        this.load.image('background', 'assets/background/final_blended_image_swap.jpg');
         this.load.image('background2', 'assets/background/2205_w015_n001_820a_p30_820.jpg');
         this.load.image('obstacle', 'assets/background/vecteezy_platform-with-desert-for-game-level-interface_15008353.png');
         this.load.image('wall', 'assets/background/wall.jpg');
-        this.load.image('background4', 'assets/background/wall.jpg');
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
         this.load.image('rope', 'assets/rope.png'); 
     }
 
     create() {
-        this.add.image(0, 0, 'menuBg').setOrigin(200).setScale(1.6); // Define a posição e escala conforme necessário
+        // Definir a imagem de fundo
+        this.add.image(0, -2100, 'background').setOrigin(0).setScale(1);
+        
+
         this.ground = this.matter.add.image(700, this.groundY + 125, 'background2').setScale(1.1);
         this.ground.setStatic(true);
 
@@ -325,23 +326,9 @@ function loadObstacles(scene) {
         { x: 1500, y: scene.groundY - 1150 },
         { x: 1000, y: scene.groundY - 1050 },
         { x: 400, y: scene.groundY - 1050 },
-        { x: 1500, y: scene.groundY - 1650 },
-        { x: 1500, y: scene.groundY - 1950 },
 
         // Novos obstáculos adicionados
-        { x: 800, y: scene.groundY - 1350 },
-        { x: 1200, y: scene.groundY - 1450 },
-        { x: 1600, y: scene.groundY - 1550 },
-        { x: 2000, y: scene.groundY - 1650 },
-        { x: 2400, y: scene.groundY - 1750 },
-        { x: 1200, y: scene.groundY - 2050 },
-        { x: 1800, y: scene.groundY - 2150 },
-        { x: 600, y: scene.groundY - 2250 },
-        { x: 1400, y: scene.groundY - 2350 },
-        { x: 2000, y: scene.groundY - 2450 },
-        { x: 1000, y: scene.groundY - 2750 },
-        { x: 1600, y: scene.groundY - 2850 },
-        { x: 2200, y: scene.groundY - 2950 },
+
     ];
 
     obstaclePositions.forEach(pos => {
@@ -363,8 +350,6 @@ function loadWall(scene) {
     scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
 
     // Adicionando mais paredes se necessário
-    let wall2 = scene.matter.add.image(1500, scene.groundY - 2000, 'wall').setScale(0.6).setStatic(true);
-    let wall3 = scene.matter.add.image(2000, scene.groundY - 2800, 'wall').setScale(0.6).setStatic(true);
 }
 
 class TutorialScene extends Phaser.Scene {
