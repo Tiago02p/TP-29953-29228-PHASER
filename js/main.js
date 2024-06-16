@@ -70,6 +70,19 @@ class MenuScene extends Phaser.Scene {
     }
 }
 
+class TutorialScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'TutorialScene' });
+    }
+
+    create() {
+        const backToMenuButton = this.add.text(100, 300, 'Back to Menu', { fontSize: '32px', fill: '#FFF' }).setInteractive();
+        backToMenuButton.on('pointerdown', () => {
+            this.scene.start('MenuScene');
+        });
+    }
+}
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
@@ -336,14 +349,23 @@ function loadbloco_desertos(scene) {
     const bloco_desertoPositions = [
         { x: 500, y: scene.groundY - 400 },
         { x: 700, y: scene.groundY - 650 },
-        { x: 900, y: scene.groundY - 750 },
         { x: 1000, y: scene.groundY - 600 },
+
+        //Enemy de areia nesta plataforma
         { x: 1300, y: scene.groundY - 500 },
+
         { x: 1600, y: scene.groundY - 600 },
         { x: 1900, y: scene.groundY - 550 },
         { x: 2200, y: scene.groundY - 600 },
-        { x: 2000, y: scene.groundY - 800 },
-        { x: 1700, y: scene.groundY - 900 },
+
+        //decidir caminho Aqui
+        { x: 2500, y: scene.groundY - 800 },
+
+        //Caminho1
+        { x: 2900, y: scene.groundY - 900 },
+
+        //Caminho2
+        { x: 2100, y: scene.groundY - 900 },
         { x: 1600, y: scene.groundY - 1050 },
         { x: 1500, y: scene.groundY - 1150 },
         { x: 1000, y: scene.groundY - 1050 },
@@ -416,16 +438,3 @@ function loadbloco_espacos(scene) {
 
 //     // Adicionando mais paredes se necessário
 // }
-
-class TutorialScene extends Phaser.Scene {
-    constructor() {
-        super({ key: 'TutorialScene' });
-    }
-
-    create() {
-        const backToMenuButton = this.add.text(100, 300, 'Back to Menu', { fontSize: '32px', fill: '#FFF' }).setInteractive();
-        backToMenuButton.on('pointerdown', () => {
-            this.scene.start('MenuScene');
-        });
-    }
-}
