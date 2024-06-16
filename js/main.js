@@ -79,7 +79,7 @@ class GameScene extends Phaser.Scene {
         this.jumpForce = -15;
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
-        this.obstacles = [];
+        this.bloco_desertos = [];
         this.topColliders = [];
         this.grabDistance = 100;
         this.backgroundTransition = null;
@@ -91,10 +91,12 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('playerC', 'assets/player2/ChikBoy_idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('playerD', 'assets/player2/ChikBoy_run.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('ceuazul', 'assets/background/ceuazul.png');
-        this.load.image('background', 'assets/background/final_blended_image_swap.jpg');
-        this.load.image('background2', 'assets/background/2205_w015_n001_820a_p30_820.jpg');
-        this.load.image('obstacle', 'assets/background/vecteezy_platform-with-desert-for-game-level-interface_15008353.png');
-        this.load.image('wall', 'assets/background/wall.jpg');
+        this.load.image('background', 'assets/background/mapa.jpg');
+        this.load.image('background2', 'assets/background/ground.jpg');
+        this.load.image('bloco_deserto', 'assets/background/bloco_deserto.png');
+        this.load.image('bloco_ceu', 'assets/background/bloco_ceu.png');
+        this.load.image('bloco_espaco', 'assets/background/bloco_espaço.png');
+        // this.load.image('wall', 'assets/background/wall.jpg'); // Removendo o carregamento da parede
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
         this.load.image('rope', 'assets/rope.png'); 
     }
@@ -159,13 +161,17 @@ class GameScene extends Phaser.Scene {
         this.teclas = this.input.keyboard.addKeys('W,A,S,D,E');
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.obstacles = [];
+        this.bloco_desertos = [];
+        this.bloco_ceus= [];
+        this.bloco_espacos = [];
         this.topColliders = [];
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
 
-        loadObstacles.call(this, this);
-        loadWall.call(this, this);
+        loadbloco_desertos.call(this, this);
+        loadbloco_ceus.call(this,this);
+        loadbloco_espacos.call(this,this);
+        // loadWall.call(this, this); // Removendo a chamada para carregar a parede
 
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
@@ -206,6 +212,14 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
             this.onGroundPlayer2 = true;
         }
+
+        // Removendo as verificações de colisão com a parede
+        // if ((bodyA === this.player1.body && bodyB === this.wall.body) || (bodyB === this.player1.body && bodyA === this.wall.body)) {
+        //     this.grabPlayer(this.player1);
+        // }
+        // if ((bodyA === this.player2.body && bodyB === this.wall.body) || (bodyB === this.player2.body && bodyA === this.wall.body)) {
+        //     this.grabPlayer(this.player2);
+        // }
     }
 
     handleCollisionEnd(event, bodyA, bodyB) {
@@ -309,12 +323,20 @@ class GameScene extends Phaser.Scene {
         const distance = Phaser.Math.Distance.Between(player.x, player.y, this.wall.x, this.wall.y);
         return distance < this.grabDistance;
     }
+
+    grabPlayer(player) {
+        player.setStatic(true); // Fixa o jogador na parede
+        this.time.delayedCall(3000, () => { // Aguarda 3 segundos
+            player.setStatic(false); // Desfixa o jogador da parede
+        });
+    }
 }
 
-function loadObstacles(scene) {
-    const obstaclePositions = [
+function loadbloco_desertos(scene) {
+    const bloco_desertoPositions = [
         { x: 500, y: scene.groundY - 400 },
         { x: 700, y: scene.groundY - 650 },
+        { x: 900, y: scene.groundY - 750 },
         { x: 1000, y: scene.groundY - 600 },
         { x: 1300, y: scene.groundY - 500 },
         { x: 1600, y: scene.groundY - 600 },
@@ -325,18 +347,16 @@ function loadObstacles(scene) {
         { x: 1600, y: scene.groundY - 1050 },
         { x: 1500, y: scene.groundY - 1150 },
         { x: 1000, y: scene.groundY - 1050 },
-        { x: 400, y: scene.groundY - 1050 },
-
-        // Novos obstáculos adicionados
-
+        { x: 400, y: scene.groundY - 1050 }
+        
     ];
 
-    obstaclePositions.forEach(pos => {
-        let obstacle = scene.matter.add.image(pos.x, pos.y, 'obstacle').setScale(0.5);
-        obstacle.setStatic(true);
-        scene.obstacles.push(obstacle);
+    bloco_desertoPositions.forEach(pos => {
+        let bloco_deserto = scene.matter.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
+        bloco_deserto.setStatic(true);
+        scene.bloco_desertos.push(bloco_deserto);
 
-        let topCollider = scene.matter.add.rectangle(obstacle.x, obstacle.y - obstacle.displayHeight / 2, obstacle.displayWidth, 10, {
+        let topCollider = scene.matter.add.rectangle(bloco_deserto.x, bloco_deserto.y - bloco_deserto.displayHeight / 2, bloco_deserto.displayWidth, 10, {
             isStatic: true,
             label: 'topCollider'
         });
@@ -345,12 +365,57 @@ function loadObstacles(scene) {
 }
 
 
-function loadWall(scene) {
-    // Ajuste da posição da parede
-    scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
+function loadbloco_ceus(scene) {
+    const bloco_ceuPositions = [
+        //Posições dos obstaculos brancos
+        { x: 500, y: scene.groundY - 1100 },
+        { x: 700, y: scene.groundY - 1250 },
+        { x: 900, y: scene.groundY - 1500 },
+        { x: 1100, y: scene.groundY - 1650 },
+        { x: 1300, y: scene.groundY - 1800 },
+        { x: 1500, y: scene.groundY - 1950 },
+        
+    ];
 
-    // Adicionando mais paredes se necessário
+    bloco_ceuPositions.forEach(pos => {
+        let bloco_ceu = scene.matter.add.image(pos.x, pos.y, 'bloco_ceu').setScale(0.5);
+        bloco_ceu.setStatic(true);
+        scene.bloco_ceus.push(bloco_ceu);
+
+        let topCollider = scene.matter.add.rectangle(bloco_ceu.x, bloco_ceu.y - bloco_ceu.displayHeight / 2, bloco_ceu.displayWidth, 10, {
+            isStatic: true,
+            label: 'topCollider'
+        });
+        scene.topColliders.push(topCollider);
+    });
 }
+
+function loadbloco_espacos(scene) {
+    const bloco_espacoPositions = [
+        //Posições dos obstaculos pretos
+        { x: 1500, y: scene.groundY - 2100 },
+        { x: 1900, y: scene.groundY - 2120 },
+    ];
+
+    bloco_espacoPositions.forEach(pos => {
+        let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.5);
+        bloco_espaco.setStatic(true);
+        scene.bloco_espacos.push(bloco_espaco);
+
+        let topCollider = scene.matter.add.rectangle(bloco_espaco.x, bloco_espaco.y - bloco_espaco.displayHeight / 2, bloco_espaco.displayWidth, 10, {
+            isStatic: true,
+            label: 'topCollider'
+        });
+        scene.topColliders.push(topCollider);
+    });
+}
+
+// function loadWall(scene) {
+//     // Ajuste da posição da parede
+//     scene.wall = scene.matter.add.image(700, scene.groundY - 1200, 'wall').setScale(0.6).setStatic(true);
+
+//     // Adicionando mais paredes se necessário
+// }
 
 class TutorialScene extends Phaser.Scene {
     constructor() {
