@@ -99,11 +99,9 @@ class GameScene extends Phaser.Scene {
         this.jumpForce = -15;
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
-        this.bloco_desertos = [];
         this.topColliders = [];
         this.grabDistance = 100;
         this.backgroundTransition = null;
-        this.Portal = null;
     }
 
     preload() {
@@ -125,87 +123,85 @@ class GameScene extends Phaser.Scene {
         this.add.image(0, -2100, 'background').setOrigin(0).setScale(1);
         this.ground = this.matter.add.image(700, this.groundY + 125, 'background2').setScale(1.1);
         this.ground.setStatic(true);
-
+    
         this.anims.create({
             key: 'idle',
             frames: this.anims.generateFrameNumbers('playerA', { start: 0, end: 5 }),
             frameRate: 8,
             repeat: -1
         });
-
+    
         this.anims.create({
             key: 'run',
             frames: this.anims.generateFrameNumbers('playerB', { start: 0, end: 9 }),
             frameRate: 10,
             repeat: -1
         });
-
+    
         this.anims.create({
             key: 'idle2',
             frames: this.anims.generateFrameNumbers('playerC', { start: 0, end: 5 }),
             frameRate: 8,
             repeat: -1
         });
-
+    
         this.anims.create({
             key: 'run2',
             frames: this.anims.generateFrameNumbers('playerD', { start: 0, end: 9 }),
             frameRate: 10,
             repeat: -1
         });
-
+    
         this.anims.create({
             key: 'Portal',
             frames: this.anims.generateFrameNumbers('Portal', { start: 0, end: 40 }),
             frameRate: 19,
             repeat: -1
         });
-
-
+    
         const player1Category = this.matter.world.nextCategory();
         const player2Category = this.matter.world.nextCategory();
-
+    
         this.player1 = this.matter.add.sprite(300, 500, 'playerA').setScale(2);
         this.player2 = this.matter.add.sprite(400, 500, 'playerC').setScale(2);
-
+    
         this.player1.setCollisionCategory(player1Category);
         this.player1.setCollidesWith([0xFFFFFFFF ^ player2Category]);
-
+    
         this.player2.setCollisionCategory(player2Category);
         this.player2.setCollidesWith([0xFFFFFFFF ^ player1Category]);
-
+    
         this.player1.play('idle');
         this.player2.play('idle2');
-
+    
         this.player1.setFixedRotation();
         this.player2.setFixedRotation();
-
+    
         this.corda = this.add.graphics();
-
+    
         this.teclas = this.input.keyboard.addKeys('W,A,S,D,E');
         this.cursors = this.input.keyboard.createCursorKeys();
-
+    
         this.bloco_desertos = [];
         this.bloco_ceus = [];
         this.bloco_espacos = [];
+        this.portals = [];
         this.topColliders = [];
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
-
+    
         loadbloco_desertos.call(this, this);
         loadbloco_ceus.call(this, this);
         loadbloco_espacos.call(this, this);
-
+        loadportals.call(this, this); 
+    
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
-
+    
         this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
         this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
-        this.Portal = this.matter.add.sprite(400, 500, 'Portal').setScale(2);
-        this.Portal.play('Portal')
     }
-
     update() {
         this.corda.clear();
         this.corda.lineStyle(2, 0xff0000);
@@ -385,6 +381,28 @@ function loadbloco_desertos(scene) {
     });
 }
 
+function loadportals(scene) {
+    const portalPositions = [
+        //Portal X
+        { x: 2900, y: scene.groundY - 1000 },
+        //Portal Y
+        { x: 50, y: scene.groundY - 1400 },
+        //Portal Z
+        { x: 100, y: scene.groundY - 2100},
+        //Portal Vitoria Falsa 1
+        { x: 2950, y: scene.groundY - 2470 },
+
+        { x: 1500, y: scene.groundY - 2750 },
+        { x: 1200, y: scene.groundY - 2750 }
+    ];
+
+
+    portalPositions.forEach(pos => {
+        let portal = scene.add.sprite(pos.x, pos.y, 'Portal').setScale(1.5);
+        portal.play('Portal');
+        scene.portals.push(portal);
+    });
+}
 function loadbloco_ceus(scene) {
     const bloco_ceuPositions = [
         //Caminho Normal
@@ -435,8 +453,8 @@ function loadbloco_espacos(scene) {
         { x: 2200, y: scene.groundY - 2200 },
 
         //Posição do PORTAL VITORIA 1 REDIRECT PARA PORTAL Y(FAKE)
-        { x: 2400, y: scene.groundY - 2470 },
-        { x: 2750, y: scene.groundY - 2370 },
+        { x: 2500, y: scene.groundY - 2470 },
+        { x: 2950, y: scene.groundY - 2370 },
 
 
         //caminho certo
@@ -461,4 +479,15 @@ function loadbloco_espacos(scene) {
         { x: 1200, y: scene.groundY - 2650 },
     ];
 
+    bloco_espacoPositions.forEach(pos => {
+        let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.5);
+        bloco_espaco.setStatic(true);
+        scene.bloco_espacos.push(bloco_espaco); 
+    
+        let topCollider = scene.matter.add.rectangle(bloco_espaco.x, bloco_espaco.y - bloco_espaco.displayHeight / 2, bloco_espaco.displayWidth, 10, {
+            isStatic: true,
+            label: 'topCollider'
+        });
+        scene.topColliders.push(topCollider);
+    });    
 }
