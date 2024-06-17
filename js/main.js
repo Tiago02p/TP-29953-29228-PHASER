@@ -102,6 +102,9 @@ class GameScene extends Phaser.Scene {
         this.topColliders = [];
         this.grabDistance = 100;
         this.backgroundTransition = null;
+        this.portalX = null;
+        this.portalY = null;
+        this.portalZ = null;
     }
 
     preload() {
@@ -193,7 +196,7 @@ class GameScene extends Phaser.Scene {
         loadbloco_desertos.call(this, this);
         loadbloco_ceus.call(this, this);
         loadbloco_espacos.call(this, this);
-        loadportals.call(this, this); 
+        loadportals.call(this, this);
     
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
@@ -233,6 +236,24 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
             this.onGroundPlayer2 = true;
         }
+         
+        // Detecção de colisão com portais
+        if ((bodyA === this.player1.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) || 
+            (bodyB === this.player1.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
+            this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
+        }
+        if ((bodyA === this.player1.body && bodyB === this.portalY.body) || 
+            (bodyB === this.player1.body && bodyA === this.portalY.body)) {
+            this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
+        }
+        if ((bodyA === this.player2.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) || 
+            (bodyB === this.player2.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
+            this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
+        }
+        if ((bodyA === this.player2.body && bodyB === this.portalY.body) || 
+            (bodyB === this.player2.body && bodyA === this.portalY.body)) {
+            this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
+        }
     }
 
     handleCollisionEnd(event, bodyA, bodyB) {
@@ -244,6 +265,11 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
             this.onGroundPlayer2 = false;
         }
+    }
+
+    teleportPlayers(destination, offsetX, offsetY) {
+        this.player1.setPosition(destination.x + offsetX, destination.y + offsetY);
+        this.player2.setPosition(destination.x + offsetX, destination.y + offsetY);
     }
 
     applyForces(distance) {
@@ -348,6 +374,7 @@ function loadbloco_desertos(scene) {
 
         //Caminho1 PORTAL X LEVA A PORTAL Y (SOBE)
         { x: 2900, y: scene.groundY - 900 },
+        { x: 2800, y: scene.groundY - 900 },
 
         //Caminho2 até ao BLOCO FALSO
         { x: 2400, y: scene.groundY - 1100 },
@@ -398,11 +425,24 @@ function loadportals(scene) {
 
 
     portalPositions.forEach(pos => {
-        let portal = scene.add.sprite(pos.x, pos.y, 'Portal').setScale(1.5);
+        let portal = scene.matter.add.sprite(pos.x, pos.y, 'Portal').setScale(1);
         portal.play('Portal');
+        portal.setStatic(true); // Tornar os portais estáticos
         scene.portals.push(portal);
+
+        // Salvar referências aos portais X, Y e Z
+        if (pos.x === 2900 && pos.y === scene.groundY - 1000) {
+            scene.portalX = portal;
+        }
+        if (pos.x === 50 && pos.y === scene.groundY - 1400) {
+            scene.portalY = portal;
+        }
+        if (pos.x === 100 && pos.y === scene.groundY - 2100) {
+            scene.portalZ = portal;
+        }
     });
 }
+
 function loadbloco_ceus(scene) {
     const bloco_ceuPositions = [
         //Caminho Normal
@@ -410,7 +450,7 @@ function loadbloco_ceus(scene) {
 
         //Caminho para PORTAL Y LIGA A PORTAL X (DESCE)
         { x: 200, y: scene.groundY - 1300 },
-        { x: 10, y: scene.groundY - 1300 },
+        { x: 35, y: scene.groundY - 1300 },
 
         { x: 400, y: scene.groundY - 1500 },
         //Decisao
