@@ -103,6 +103,7 @@ class GameScene extends Phaser.Scene {
         this.topColliders = [];
         this.grabDistance = 100;
         this.backgroundTransition = null;
+        this.Portal = null;
     }
 
     preload() {
@@ -117,6 +118,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('bloco_ceu', 'assets/background/bloco_ceu.png');
         this.load.image('bloco_espaco', 'assets/background/bloco_espaço.png');
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
+        this.load.spritesheet('Portal','assets/Portal/Portal.png', { frameWidth: 100, frameHeight: 100 });
     }
 
     create() {
@@ -151,6 +153,14 @@ class GameScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'Portal',
+            frames: this.anims.generateFrameNumbers('Portal', { start: 0, end: 40 }),
+            frameRate: 19,
+            repeat: -1
+        });
+
 
         const player1Category = this.matter.world.nextCategory();
         const player2Category = this.matter.world.nextCategory();
@@ -192,6 +202,8 @@ class GameScene extends Phaser.Scene {
 
         this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
         this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
+        this.Portal = this.matter.add.sprite(400, 500, 'Portal').setScale(2);
+        this.Portal.play('Portal')
     }
 
     update() {
