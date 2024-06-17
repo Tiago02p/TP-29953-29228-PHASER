@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quitButton = document.getElementById('quitButton');
     const tutorialButton = document.getElementById('tutorialButton');
     const backToMenuButton = document.getElementById('backToMenuButton');
+    const backToMenuButtonGame = document.getElementById('backToMenuButtonGame');
 
     const menu = document.getElementById('menu');
     const tutorial = document.getElementById('tutorial');
@@ -53,6 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     backToMenuButton.addEventListener('click', () => {
         showSection(menu);
+    });
+
+    backToMenuButtonGame.addEventListener('click', () => {
+        showSection(menu);
+        game.scene.stop('GameScene');
+        game.scene.start('MenuScene');
     });
 });
 
@@ -338,7 +345,7 @@ function loadbloco_desertos(scene) {
         { x: 2400, y: scene.groundY - 1100 },
 
         //BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
-        //É como um bloco de deserto fantasma na Posição { x: 2700, y: scene.groundY - 1300 },
+        //É como um bloco de deserto fantasma na Posição { x: 2600, y: scene.groundY - 1300 },
         
 
          //Caminho3 
@@ -440,20 +447,6 @@ function loadbloco_espacos(scene) {
 
         //Esta Posição do será a posição do PORTAL VITORIA 2 REDIRECT PARA PORTAL Y(FAKE)
         { x: 1200, y: scene.groundY - 2650 },
-
-
-
     ];
 
-    bloco_espacoPositions.forEach(pos => {
-        let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.5);
-        bloco_espaco.setStatic(true);
-        scene.bloco_espacos.push(bloco_espaco);
-
-        let topCollider = scene.matter.add.rectangle(bloco_espaco.x, bloco_espaco.y - bloco_espaco.displayHeight / 2, bloco_espaco.displayWidth, 10, {
-            isStatic: true,
-            label: 'topCollider'
-        });
-        scene.topColliders.push(topCollider);
-    });
 }

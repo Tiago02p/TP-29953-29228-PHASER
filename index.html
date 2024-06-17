@@ -43,7 +43,7 @@
             display: flex;
         }
         #menu, #tutorial {
-            background-image: url('assets/background/menuBg.jpg'); /* Ajuste o caminho conforme necessário */
+            background-image: url('assets/background/menuBg.jpg');
             background-size: cover;
             background-position: center;
         }
@@ -110,10 +110,30 @@
             width: 100%;
             height: auto;
         }
+        .backButton {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            padding: 10px 20px;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #00056d;
+            color: rgb(255, 255, 255);
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+            font-family: 'AmaticSC-Regular', Arial, sans-serif;
+        }
+        .backButton:hover {
+            background-color: #ffea00;
+            color: black;
+        }
     </style>
 </head>
 <body>
-    <div id="gameContainer"></div>
+    <div id="gameContainer">
+        <button id="backToMenuButtonGame" class="backButton">Back</button>
+    </div>
     <div id="menu" class="active">
         <div id="title">Beaks & Wings</div>
         <button id="playButton">Play</button>
