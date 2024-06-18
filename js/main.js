@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         physics: {
             default: 'matter',
             matter: {
-                gravity: { y: 0.8 },
+                gravity: { y: 0.3 },
                 bounds: {
                     x: 0,
                     y: 0,
@@ -96,7 +96,7 @@ class GameScene extends Phaser.Scene {
         this.player1 = null;
         this.player2 = null;
         this.groundY = 750;
-        this.jumpForce = -15;
+        this.jumpForce = -10;
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
         this.topColliders = [];
@@ -235,7 +235,7 @@ class GameScene extends Phaser.Scene {
         this.cameras.main.startFollow({ x: midPointX, y: midPointY });
 
         const distance = Phaser.Math.Distance.Between(this.player1.x, this.player1.y, this.player2.x, this.player2.y);
-        const maxDistance = 200;
+        const maxDistance = 250;
 
         if (distance > maxDistance) {
             this.applyForces(distance);
@@ -298,7 +298,7 @@ class GameScene extends Phaser.Scene {
     }
 
     applyForces(distance) {
-        const forceMagnitude = 0.00009;
+        const forceMagnitude = 0.00004;
         if (this.onGroundPlayer1 && !this.onGroundPlayer2) {
             const forceX = (this.player1.x - this.player2.x) * forceMagnitude;
             const forceY = (this.player1.y - this.player2.y) * forceMagnitude;
