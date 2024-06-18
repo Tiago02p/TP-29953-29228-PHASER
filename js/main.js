@@ -104,7 +104,6 @@ class GameScene extends Phaser.Scene {
         this.backgroundTransition = null;
         this.portalX = null;
         this.portalY = null;
-        this.portalZ = null;
         this.portalLose1 = null;
         this.portalLose2 = null;
         this.portalLose3 = null;
@@ -213,7 +212,6 @@ class GameScene extends Phaser.Scene {
         loadportals2.call(this, this);
         loadblocos_fantasmas.call(this, this);
 
-
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
@@ -253,33 +251,34 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
             this.onGroundPlayer2 = true;
         }
-
-        // Detecção de colisão com portais
-        if ((bodyA === this.player1.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) ||
-            (bodyB === this.player1.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
-            this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
+    
+        const portalsLose = [this.portalLose1, this.portalLose2, this.portalLose3];
+    
+        // Player 1 portal collision
+        if ((bodyA === this.player1.body && (bodyB === this.portalX.body || portalsLose.includes(bodyB))) ||
+            (bodyB === this.player1.body && (bodyA === this.portalX.body || portalsLose.includes(bodyA)))) {
+            const randomPortal = Math.random() < 0.5 ? this.portalX : this.portalY;
+            this.player1.setPosition(randomPortal.x + 50, randomPortal.y);
         }
         if ((bodyA === this.player1.body && bodyB === this.portalY.body) ||
             (bodyB === this.player1.body && bodyA === this.portalY.body)) {
-            this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
+            this.player1.setPosition(this.portalX.x - 50, this.portalX.y);
         }
-        if ((bodyA === this.player1.body && bodyB === this.portalLose1.body) ||
-            (bodyB === this.player1.body && bodyA === this.portalLose1.body)) {
-            this.teleportPlayers(this.portalX, 50, 0); // teleporta à esquerda do portalX
-        }
-        if ((bodyA === this.player2.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) ||
-            (bodyB === this.player2.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
-            this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
+    
+        // Player 2 portal collision
+        if ((bodyA === this.player2.body && (bodyB === this.portalX.body || portalsLose.includes(bodyB))) ||
+            (bodyB === this.player2.body && (bodyA === this.portalX.body || portalsLose.includes(bodyA)))) {
+            const randomPortal = Math.random() < 0.5 ? this.portalX : this.portalY;
+            this.player2.setPosition(randomPortal.x + 50, randomPortal.y);
         }
         if ((bodyA === this.player2.body && bodyB === this.portalY.body) ||
             (bodyB === this.player2.body && bodyA === this.portalY.body)) {
-            this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
-        }
-        if ((bodyA === this.player1.body && bodyB === this.portalLose1.body) ||
-            (bodyB === this.player1.body && bodyA === this.portalLose1.body)) {
-            this.teleportPlayers(this.portalX, 50, 0); // teleporta à esquerda do portalX
+            this.player2.setPosition(this.portalX.x - 50, this.portalX.y);
         }
     }
+    
+    
+    
 
     handleCollisionEnd(event, bodyA, bodyB) {
         if ((bodyA === this.player1.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
@@ -396,6 +395,7 @@ function loadbloco_desertos(scene) {
         if (pos.x === 2600 && pos.y === scene.groundY - 1300) {
             // Adicionando bloco fantasma
             scene.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
+            scene.add.text(pos.x - 20, pos.y - 50, 'JUMP HERE', { fontSize: '20px', fill: '#FFF' });
         } else {
             let bloco_deserto = scene.matter.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
             bloco_deserto.setStatic(true);
@@ -415,9 +415,7 @@ function loadportals(scene) {
         //Portal X
         { x: 2900, y: scene.groundY - 1000 },
         //Portal Y
-        { x: 50, y: scene.groundY - 1400 },
-        //Portal Z
-        { x: 100, y: scene.groundY - 2100 },
+        { x: 50, y: scene.groundY - 1400 }
     ];
 
     portalPositions.forEach(pos => {
@@ -426,15 +424,12 @@ function loadportals(scene) {
         portal.setStatic(true); // Tornar os portais estáticos
         scene.portals.push(portal);
 
-        // Salvar referências aos portais X, Y e Z
+        // Salvar referências aos portais X e Y
         if (pos.x === 2900 && pos.y === scene.groundY - 1000) {
             scene.portalX = portal;
         }
         if (pos.x === 50 && pos.y === scene.groundY - 1400) {
             scene.portalY = portal;
-        }
-        if (pos.x === 100 && pos.y === scene.groundY - 2100) {
-            scene.portalZ = portal;
         }
     });
 }
@@ -460,7 +455,7 @@ function loadportals2(scene) {
         portal.setStatic(true); // Tornar os portais estáticos
         scene.portals.push(portal);
 
-        // Salvar referências aos portais X, Y e Z
+        // Salvar referências aos portais de vitória e perda
         if (pos.x === 2950 && pos.y === scene.groundY - 2470) {
             scene.portalLose1 = portal;
         }
@@ -488,9 +483,6 @@ function loadbloco_ceus(scene) {
         { x: 400, y: scene.groundY - 1500 },
         //Decisao
         { x: 700, y: scene.groundY - 1600 },
-
-        //cAMINHO PORTAL Z
-        { x: 400, y: scene.groundY - 1800 },
 
         //cAMINHO Certo
         { x: 1100, y: scene.groundY - 1650 },
@@ -563,5 +555,6 @@ function loadblocos_fantasmas(scene) {
 
     bloco_fantasmaPositions.forEach(pos => {
         scene.add.image(pos.x, pos.y, pos.image).setScale(0.5);
+        scene.add.text(pos.x - 30, pos.y - 50, 'JUMP HERE', { fontSize: '20px', fill: '#FFF' });
     });
 }
