@@ -105,6 +105,10 @@ class GameScene extends Phaser.Scene {
         this.portalX = null;
         this.portalY = null;
         this.portalZ = null;
+        this.portalLose1 = null;
+        this.portalLose2 = null;
+        this.portalLose3 = null;
+        this.portalWin = null;
     }
 
     preload() {
@@ -120,6 +124,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('bloco_espaco', 'assets/background/bloco_espaço.png');
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
         this.load.spritesheet('Portal','assets/Portal/Portal.png', { frameWidth: 100, frameHeight: 100 });
+        this.load.spritesheet('Portal2','assets/Portal/Portal2.png', { frameWidth: 100, frameHeight: 100 });
     }
 
     create() {
@@ -161,6 +166,13 @@ class GameScene extends Phaser.Scene {
             frameRate: 19,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'Portal2',
+            frames: this.anims.generateFrameNumbers('Portal2', { start: 0, end: 40 }),
+            frameRate: 19,
+            repeat: -1
+        });
     
         const player1Category = this.matter.world.nextCategory();
         const player2Category = this.matter.world.nextCategory();
@@ -197,6 +209,7 @@ class GameScene extends Phaser.Scene {
         loadbloco_ceus.call(this, this);
         loadbloco_espacos.call(this, this);
         loadportals.call(this, this);
+        loadportals2.call(this, this);
     
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
@@ -416,11 +429,6 @@ function loadportals(scene) {
         { x: 50, y: scene.groundY - 1400 },
         //Portal Z
         { x: 100, y: scene.groundY - 2100},
-        //Portal Vitoria Falsa 1
-        { x: 2950, y: scene.groundY - 2470 },
-
-        { x: 1500, y: scene.groundY - 2750 },
-        { x: 1200, y: scene.groundY - 2750 }
     ];
 
 
@@ -439,6 +447,44 @@ function loadportals(scene) {
         }
         if (pos.x === 100 && pos.y === scene.groundY - 2100) {
             scene.portalZ = portal;
+        }
+    });
+}
+
+function loadportals2(scene) {
+    const portalPositions = [
+        //Portal Vitoria Falsa 1
+        { x: 2950, y: scene.groundY - 2470 },
+
+        //Portal Vitoria Falsa 2
+        { x: 1500, y: scene.groundY - 2700 },
+
+        //Portal Vitoria
+        { x: 1100, y: scene.groundY - 2700 },
+
+        //Portal Vitoria Falsa 3
+        { x: 200, y: scene.groundY - 2500 }
+    ];
+
+
+    portalPositions.forEach(pos => {
+        let portal = scene.matter.add.sprite(pos.x, pos.y, 'Portal2').setScale(1);
+        portal.play('Portal2');
+        portal.setStatic(true); // Tornar os portais estáticos
+        scene.portals.push(portal);
+
+        // Salvar referências aos portais X, Y e Z
+        if (pos.x === 2950 && pos.y === scene.groundY - 2470) {
+            scene.portalLose1 = portal;
+        }
+        if (pos.x === 1400 && pos.y === scene.groundY - 2700) {
+            scene.portalLose2 = portal;
+        }
+        if (pos.x === 1100 && pos.y === scene.groundY - 2700) {
+            scene.portalWin = portal;
+        }
+        if (pos.x === 800 && pos.y === scene.groundY - 2700) {
+            scene.portalLose3 = portal;
         }
     });
 }
@@ -492,9 +538,8 @@ function loadbloco_espacos(scene) {
         //Decidir
         { x: 2200, y: scene.groundY - 2200 },
 
-        //Posição do PORTAL VITORIA 1 REDIRECT PARA PORTAL Y(FAKE)
-        { x: 2500, y: scene.groundY - 2470 },
-        { x: 2950, y: scene.groundY - 2370 },
+        //Posição do PORTAL VITORIA 1 FALSO
+        { x: 2650, y: scene.groundY - 2350 },
 
 
         //caminho certo
@@ -502,21 +547,19 @@ function loadbloco_espacos(scene) {
         { x: 1600, y: scene.groundY - 2170 },
 
         //Decidir2
-        { x: 1200, y: scene.groundY - 2350 },
+        { x: 1200, y: scene.groundY - 2250 },
         
 
         { x: 900, y: scene.groundY - 2150 },
+
         //BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
         //É como um bloco de espaço fantasma na Posição { x: 500, y: scene.groundY - 2100 },
         
 
-        { x: 1400, y: scene.groundY - 2350 },
+        { x: 1400, y: scene.groundY - 2250 },
 
-        //Esta Posição do será a posição do PORTAL VITORIA 2 REDIRECT PARA PORTAL Y(FAKE)
-        { x: 1500, y: scene.groundY - 2650 },
-
-        //Esta Posição do será a posição do PORTAL VITORIA 2 REDIRECT PARA PORTAL Y(FAKE)
-        { x: 1200, y: scene.groundY - 2650 },
+        { x: 600, y: scene.groundY - 2250 },
+        { x: 200, y: scene.groundY - 2350 },
     ];
 
     bloco_espacoPositions.forEach(pos => {
