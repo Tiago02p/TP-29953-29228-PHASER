@@ -123,43 +123,44 @@ class GameScene extends Phaser.Scene {
         this.load.image('bloco_ceu', 'assets/background/bloco_ceu.png');
         this.load.image('bloco_espaco', 'assets/background/bloco_espaço.png');
         this.load.image('menuBg', 'assets/background/menuBg.jpg');
-        this.load.spritesheet('Portal','assets/Portal/Portal.png', { frameWidth: 100, frameHeight: 100 });
-        this.load.spritesheet('Portal2','assets/Portal/Portal2.png', { frameWidth: 100, frameHeight: 100 });
+        this.load.spritesheet('Portal', 'assets/Portal/Portal.png', { frameWidth: 100, frameHeight: 100 });
+        this.load.spritesheet('Portal2', 'assets/Portal/Portal2.png', { frameWidth: 100, frameHeight: 100 });
+        this.load.audio('backgroundMusic', 'assets/audio/song.mp3'); // Carregar a música de fundo
     }
 
     create() {
         this.add.image(0, -2100, 'background').setOrigin(0).setScale(1);
         this.ground = this.matter.add.image(700, this.groundY + 125, 'background2').setScale(1.1);
         this.ground.setStatic(true);
-    
+
         this.anims.create({
             key: 'idle',
             frames: this.anims.generateFrameNumbers('playerA', { start: 0, end: 5 }),
             frameRate: 8,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'run',
             frames: this.anims.generateFrameNumbers('playerB', { start: 0, end: 9 }),
             frameRate: 10,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'idle2',
             frames: this.anims.generateFrameNumbers('playerC', { start: 0, end: 5 }),
             frameRate: 8,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'run2',
             frames: this.anims.generateFrameNumbers('playerD', { start: 0, end: 9 }),
             frameRate: 10,
             repeat: -1
         });
-    
+
         this.anims.create({
             key: 'Portal',
             frames: this.anims.generateFrameNumbers('Portal', { start: 0, end: 40 }),
@@ -173,30 +174,30 @@ class GameScene extends Phaser.Scene {
             frameRate: 19,
             repeat: -1
         });
-    
+
         const player1Category = this.matter.world.nextCategory();
         const player2Category = this.matter.world.nextCategory();
-    
+
         this.player1 = this.matter.add.sprite(300, 500, 'playerA').setScale(2);
         this.player2 = this.matter.add.sprite(400, 500, 'playerC').setScale(2);
-    
+
         this.player1.setCollisionCategory(player1Category);
         this.player1.setCollidesWith([0xFFFFFFFF ^ player2Category]);
-    
+
         this.player2.setCollisionCategory(player2Category);
         this.player2.setCollidesWith([0xFFFFFFFF ^ player1Category]);
-    
+
         this.player1.play('idle');
         this.player2.play('idle2');
-    
+
         this.player1.setFixedRotation();
         this.player2.setFixedRotation();
-    
+
         this.corda = this.add.graphics();
-    
+
         this.teclas = this.input.keyboard.addKeys('W,A,S,D,E');
         this.cursors = this.input.keyboard.createCursorKeys();
-    
+
         this.bloco_desertos = [];
         this.bloco_ceus = [];
         this.bloco_espacos = [];
@@ -204,20 +205,23 @@ class GameScene extends Phaser.Scene {
         this.topColliders = [];
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
-    
+
         loadbloco_desertos.call(this, this);
         loadbloco_ceus.call(this, this);
         loadbloco_espacos.call(this, this);
         loadportals.call(this, this);
         loadportals2.call(this, this);
-    
+        loadblocos_fantasmas.call(this, this);
+
+
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
-    
+
         this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
         this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
     }
+
     update() {
         this.corda.clear();
         this.corda.lineStyle(2, 0xff0000);
@@ -249,21 +253,21 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
             this.onGroundPlayer2 = true;
         }
-         
+
         // Detecção de colisão com portais
-        if ((bodyA === this.player1.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) || 
+        if ((bodyA === this.player1.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) ||
             (bodyB === this.player1.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
             this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
         }
-        if ((bodyA === this.player1.body && bodyB === this.portalY.body) || 
+        if ((bodyA === this.player1.body && bodyB === this.portalY.body) ||
             (bodyB === this.player1.body && bodyA === this.portalY.body)) {
             this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
         }
-        if ((bodyA === this.player2.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) || 
+        if ((bodyA === this.player2.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) ||
             (bodyB === this.player2.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
             this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
         }
-        if ((bodyA === this.player2.body && bodyB === this.portalY.body) || 
+        if ((bodyA === this.player2.body && bodyB === this.portalY.body) ||
             (bodyB === this.player2.body && bodyA === this.portalY.body)) {
             this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
         }
@@ -389,14 +393,13 @@ function loadbloco_desertos(scene) {
         { x: 2900, y: scene.groundY - 900 },
         { x: 2800, y: scene.groundY - 900 },
 
-        //Caminho2 até ao BLOCO FALSO
+        //Caminho2 até ao BLOCO FANTASMA
         { x: 2400, y: scene.groundY - 1100 },
 
-        //BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
-        //É como um bloco de deserto fantasma na Posição { x: 2600, y: scene.groundY - 1300 },
-        
+        //BLOCO FANTASMA
+        { x: 2600, y: scene.groundY - 1300 },
 
-         //Caminho3 
+        //Caminho3 
         { x: 2100, y: scene.groundY - 900 },
         { x: 1800, y: scene.groundY - 1050 },
         { x: 1500, y: scene.groundY - 1150 },
@@ -405,7 +408,7 @@ function loadbloco_desertos(scene) {
 
     bloco_desertoPositions.forEach(pos => {
         if (pos.x === 2600 && pos.y === scene.groundY - 1300) {
-            // Bloco fantasma
+            // Adicionando bloco fantasma
             scene.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
         } else {
             let bloco_deserto = scene.matter.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
@@ -428,9 +431,8 @@ function loadportals(scene) {
         //Portal Y
         { x: 50, y: scene.groundY - 1400 },
         //Portal Z
-        { x: 100, y: scene.groundY - 2100},
+        { x: 100, y: scene.groundY - 2100 },
     ];
-
 
     portalPositions.forEach(pos => {
         let portal = scene.matter.add.sprite(pos.x, pos.y, 'Portal').setScale(1);
@@ -465,7 +467,6 @@ function loadportals2(scene) {
         //Portal Vitoria Falsa 3
         { x: 200, y: scene.groundY - 2500 }
     ];
-
 
     portalPositions.forEach(pos => {
         let portal = scene.matter.add.sprite(pos.x, pos.y, 'Portal2').setScale(1);
@@ -503,8 +504,7 @@ function loadbloco_ceus(scene) {
         { x: 700, y: scene.groundY - 1600 },
 
         //cAMINHO PORTAL Z
-        { x: 400, y: scene.groundY - 1800},
-        { x: 100, y: scene.groundY - 2000},
+        { x: 400, y: scene.groundY - 1800 },
 
         //cAMINHO Certo
         { x: 1100, y: scene.groundY - 1650 },
@@ -513,7 +513,7 @@ function loadbloco_ceus(scene) {
         { x: 2100, y: scene.groundY - 1700 },
         { x: 2900, y: scene.groundY - 1500 },
         { x: 2600, y: scene.groundY - 1750 },
-        
+
     ];
 
     bloco_ceuPositions.forEach(pos => {
@@ -541,20 +541,14 @@ function loadbloco_espacos(scene) {
         //Posição do PORTAL VITORIA 1 FALSO
         { x: 2650, y: scene.groundY - 2350 },
 
-
         //caminho certo
         { x: 1900, y: scene.groundY - 2050 },
         { x: 1600, y: scene.groundY - 2170 },
 
         //Decidir2
         { x: 1200, y: scene.groundY - 2250 },
-        
 
         { x: 900, y: scene.groundY - 2150 },
-
-        //BLOCO FALSO, NESTA POSIÇÃO EU APENAS QUERO A IMAGEM DO BLOCO NÃO QUERO COLISÕES NEM NADA DISSO
-        //É como um bloco de espaço fantasma na Posição { x: 500, y: scene.groundY - 2100 },
-        
 
         { x: 1400, y: scene.groundY - 2250 },
 
@@ -563,14 +557,25 @@ function loadbloco_espacos(scene) {
     ];
 
     bloco_espacoPositions.forEach(pos => {
-        let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.5);
-        bloco_espaco.setStatic(true);
-        scene.bloco_espacos.push(bloco_espaco); 
-    
-        let topCollider = scene.matter.add.rectangle(bloco_espaco.x, bloco_espaco.y - bloco_espaco.displayHeight / 2, bloco_espaco.displayWidth, 10, {
-            isStatic: true,
-            label: 'topCollider'
-        });
-        scene.topColliders.push(topCollider);
-    });    
+      let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.5);
+            bloco_espaco.setStatic(true);
+            scene.bloco_espacos.push(bloco_espaco);
+
+            let topCollider = scene.matter.add.rectangle(bloco_espaco.x, bloco_espaco.y - bloco_espaco.displayHeight / 2, bloco_espaco.displayWidth, 10, {
+                isStatic: true,
+                label: 'topCollider'
+            });
+            scene.topColliders.push(topCollider);
+    });
+}
+
+function loadblocos_fantasmas(scene) {
+    const bloco_fantasmaPositions = [
+        { x: 2600, y: scene.groundY - 1300, image: 'bloco_deserto' },
+        { x: 100, y: scene.groundY - 1950, image: 'bloco_espaco' }
+    ];
+
+    bloco_fantasmaPositions.forEach(pos => {
+        scene.add.image(pos.x, pos.y, pos.image).setScale(0.5);
+    });
 }
