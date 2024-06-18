@@ -263,6 +263,10 @@ class GameScene extends Phaser.Scene {
             (bodyB === this.player1.body && bodyA === this.portalY.body)) {
             this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
         }
+        if ((bodyA === this.player1.body && bodyB === this.portalLose1.body) ||
+            (bodyB === this.player1.body && bodyA === this.portalLose1.body)) {
+            this.teleportPlayers(this.portalX, 50, 0); // teleporta à esquerda do portalX
+        }
         if ((bodyA === this.player2.body && (bodyB === this.portalX.body || bodyB === this.portalZ.body)) ||
             (bodyB === this.player2.body && (bodyA === this.portalX.body || bodyA === this.portalZ.body))) {
             this.teleportPlayers(this.portalY, 50, 0); // teleporta abaixo do portalY
@@ -270,6 +274,10 @@ class GameScene extends Phaser.Scene {
         if ((bodyA === this.player2.body && bodyB === this.portalY.body) ||
             (bodyB === this.player2.body && bodyA === this.portalY.body)) {
             this.teleportPlayers(this.portalX, -50, 0); // teleporta à esquerda do portalX
+        }
+        if ((bodyA === this.player1.body && bodyB === this.portalLose1.body) ||
+            (bodyB === this.player1.body && bodyA === this.portalLose1.body)) {
+            this.teleportPlayers(this.portalX, 50, 0); // teleporta à esquerda do portalX
         }
     }
 
@@ -350,28 +358,6 @@ class GameScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.cursors.up) && this.onGroundPlayer2) {
             this.player2.setVelocityY(this.jumpForce);
             this.onGroundPlayer2 = false;
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.teclas.E)) {
-            if (this.isNearWall(this.player1)) {
-                this.grabbingPlayer1 = !this.grabbingPlayer1;
-                if (this.grabbingPlayer1) {
-                    this.player1.setStatic(true);
-                } else {
-                    this.player1.setStatic(false);
-                }
-            }
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.cursors.shift)) {
-            if (this.isNearWall(this.player2)) {
-                this.grabbingPlayer2 = !this.grabbingPlayer2;
-                if (this.grabbingPlayer2) {
-                    this.player2.setStatic(true);
-                } else {
-                    this.player2.setStatic(false);
-                }
-            }
         }
     }
 }
