@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         },
-        scene: [MenuScene, GameScene, TutorialScene]
+        scene: [MenuScene, GameScene, TutorialScene, WinScene]
     };
 
     const game = new Phaser.Game(config);
@@ -272,7 +272,7 @@ class GameScene extends Phaser.Scene {
                 (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
                 this.onGroundPlayer2 = true;
             }
-    
+
             // Verificação de colisão com portal X
             if ((bodyA === this.player1.body && bodyB === this.portalX.body) ||
                 (bodyB === this.player1.body && bodyA === this.portalX.body) ||
@@ -280,7 +280,7 @@ class GameScene extends Phaser.Scene {
                 (bodyB === this.player2.body && bodyA === this.portalX.body)) {
                 this.teleportPlayers(this.portalY, 45, 0); // Teletransportar para a posição à direita do portal Y
             }
-    
+
             // Verificação de colisão com portal Y
             if ((bodyA === this.player1.body && bodyB === this.portalY.body) ||
                 (bodyB === this.player1.body && bodyA === this.portalY.body) ||
@@ -288,16 +288,24 @@ class GameScene extends Phaser.Scene {
                 (bodyB === this.player2.body && bodyA === this.portalY.body)) {
                 this.teleportPlayers(this.portalX, -10, 0); // Teletransportar para a posição à esquerda do portal X
             }
+
+            // Verificação de colisão com portal de vitória
+            if ((bodyA === this.player1.body && bodyB === this.portalWin.body) ||
+                (bodyB === this.player1.body && bodyA === this.portalWin.body) ||
+                (bodyA === this.player2.body && bodyB === this.portalWin.body) ||
+                (bodyB === this.player2.body && bodyA === this.portalWin.body)) {
+                this.scene.start('WinScene'); // Inicia a cena de vitória
+            }
+
+            // Verificação de colisão com portais de perda
+            if ((bodyA === this.player1.body && (bodyB === this.portalLose1.body || bodyB === this.portalLose2.body || bodyB === this.portalLose3.body)) ||
+                (bodyB === this.player1.body && (bodyA === this.portalLose1.body || bodyA === this.portalLose2.body || bodyA === this.portalLose3.body)) ||
+                (bodyA === this.player2.body && (bodyB === this.portalLose1.body || bodyB === this.portalLose2.body || bodyB === this.portalLose3.body)) ||
+                (bodyB === this.player2.body && (bodyA === this.portalLose1.body || bodyA === this.portalLose2.body || bodyA === this.portalLose3.body))) {
+                this.teleportPlayers({ x: 300, y: 500 }, 0, 0); // Teletransportar para a posição inicial
+            }
         });
     }
-    
-    teleportPlayers(destination, offsetX, offsetY) {
-        this.player1.setPosition(destination.x + offsetX, destination.y + offsetY);
-        this.player2.setPosition(destination.x + offsetX, destination.y + offsetY);
-    }
-    
-    
-    
 
     handleCollisionEnd(event) {
         event.pairs.forEach(pair => {
@@ -415,6 +423,22 @@ class GameScene extends Phaser.Scene {
         }
         return false;
     }
+
+    teleportPlayers(destination, offsetX, offsetY) {
+        this.player1.setPosition(destination.x + offsetX, destination.y + offsetY);
+        this.player2.setPosition(destination.x + offsetX, destination.y + offsetY);
+    }
+}
+
+class WinScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'WinScene' });
+    }
+
+    create() {
+        this.cameras.main.setBackgroundColor('#FFFFFF'); // Define o fundo branco
+        this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'EZ WIN', { fontSize: '64px', fill: '#000' }).setOrigin(0.5);
+    }
 }
 
 function loadbloco_desertos(scene) {
@@ -490,16 +514,9 @@ function loadportals(scene) {
 
 function loadportals2(scene) {
     const portalPositions = [
-        //Portal Vitoria Falsa 1
         { x: 2950, y: scene.groundY - 2470 },
-
-        //Portal Vitoria Falsa 2
         { x: 1500, y: scene.groundY - 2600 },
-
-        //Portal Vitoria
         { x: 1100, y: scene.groundY - 2600 },
-
-        //Portal Vitoria Falsa 3
         { x: 200, y: scene.groundY - 2500 }
     ];
 
@@ -518,13 +535,13 @@ function loadportals2(scene) {
             scene.add.text(pos.x - 70, pos.y - 100, 'FINISH HERE', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose2 = portal;
         }
-        if (pos.x === 1100 && pos.y === scene.groundY - 2600) {
-            scene.add.text(pos.x - 60, pos.y - 100, 'THE END', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalWin = portal;
-        }
         if (pos.x === 200 && pos.y === scene.groundY - 2500) {
-            scene.add.text(pos.x - 80, pos.y - 100, 'END?', { font: '50px Amatic-Bold', fill: '#f1c232' });
+            scene.add.text(pos.x - 60, pos.y - 100, 'END?', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose3 = portal;
+        }
+        if (pos.x === 1100 && pos.y === scene.groundY - 2600) {
+            scene.add.text(pos.x - 80, pos.y - 100, 'THE END', { font: '50px Amatic-Bold', fill: '#f1c232' });
+            scene.portalWin = portal;
         }
     });
 }
@@ -567,6 +584,7 @@ function loadbloco_espacos(scene) {
         //Posições dos obstaculos pretos
         { x: 2950, y: scene.groundY - 1900 },
         { x: 2550, y: scene.groundY - 2050 },
+        { x: 200, y: scene.groundY - 2300 },
 
         //Decidir
         { x: 2200, y: scene.groundY - 2200 },
