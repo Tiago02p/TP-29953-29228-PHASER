@@ -582,7 +582,7 @@ function loadbloco_espacos(scene) {
 
 function loadblocos_fantasmas(scene) {
     const bloco_fantasmaPositions = [
-        { x: 2600, y: scene.groundY - 1300, image: 'bloco_deserto' },
+        { x: 2600, y: scene.groundY - 1300, image: 'bloco_deserto', scale: 0.5  },
         { x: 400, y: scene.groundY - 1850, image: 'bloco_ceu', scale: 2.3 }
     ];
 
