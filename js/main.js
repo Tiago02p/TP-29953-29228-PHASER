@@ -108,6 +108,8 @@ class GameScene extends Phaser.Scene {
         this.portalLose2 = null;
         this.portalLose3 = null;
         this.portalWin = null;
+        this.grabbingPlayer1 = false;
+        this.grabbingPlayer2 = false;
     }
 
     preload() {
@@ -125,6 +127,7 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('Portal', 'assets/Portal/Portal.png', { frameWidth: 100, frameHeight: 100 });
         this.load.spritesheet('Portal2', 'assets/Portal/Portal2.png', { frameWidth: 100, frameHeight: 100 });
         this.load.audio('backgroundMusic', 'assets/audio/song.mp3'); // Carregar a música de fundo
+        this.load.image('wall', 'assets/background/wall.jpg');
     }
 
     create() {
@@ -202,6 +205,7 @@ class GameScene extends Phaser.Scene {
         this.bloco_espacos = [];
         this.portals = [];
         this.topColliders = [];
+        this.walls = [];
         this.onGroundPlayer1 = true;
         this.onGroundPlayer2 = true;
 
@@ -211,6 +215,16 @@ class GameScene extends Phaser.Scene {
         loadportals.call(this, this);
         loadportals2.call(this, this);
         loadblocos_fantasmas.call(this, this);
+
+        // Adicionar novas paredes
+        const wallPositions = [
+            { x: 1200, y: this.groundY - 1400 },
+        ];
+
+        wallPositions.forEach(pos => {
+            let wall = this.matter.add.image(pos.x, pos.y, 'wall').setScale(0.6).setStatic(true);
+            this.walls.push(wall);
+        });
 
         this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
         this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
@@ -234,6 +248,7 @@ class GameScene extends Phaser.Scene {
 
         const distance = Phaser.Math.Distance.Between(this.player1.x, this.player1.y, this.player2.x, this.player2.y);
         const maxDistance = 250;
+        const maxStretchDistance = 300;
 
         if (distance > maxDistance) {
             this.applyForces(distance);
@@ -242,76 +257,32 @@ class GameScene extends Phaser.Scene {
         this.handlePlayerMovement();
     }
 
-    handleCollisionActive(event, bodyA, bodyB) {
-        if ((bodyA === this.player1.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
-            (bodyB === this.player1.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
-            this.onGroundPlayer1 = true;
-        }
-        if ((bodyA === this.player2.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
-            (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
-            this.onGroundPlayer2 = true;
-        }
-    
-        const portalsLose = [this.portalLose1, this.portalLose2, this.portalLose3];
-    
-        // Player 1 portal collision
-        if ((bodyA === this.player1.body && (bodyB === this.portalX.body || portalsLose.includes(bodyB))) ||
-            (bodyB === this.player1.body && (bodyA === this.portalX.body || portalsLose.includes(bodyA)))) {
-            const randomPortal = Math.random() < 0.5 ? this.portalX : this.portalY;
-            this.player1.setPosition(randomPortal.x + 50, randomPortal.y);
-        }
-        if ((bodyA === this.player1.body && bodyB === this.portalY.body) ||
-            (bodyB === this.player1.body && bodyA === this.portalY.body)) {
-            this.player1.setPosition(this.portalX.x - 50, this.portalX.y);
-        }
-    
-        // Player 2 portal collision
-        if ((bodyA === this.player2.body && (bodyB === this.portalX.body || portalsLose.includes(bodyB))) ||
-            (bodyB === this.player2.body && (bodyA === this.portalX.body || portalsLose.includes(bodyA)))) {
-            const randomPortal = Math.random() < 0.5 ? this.portalX : this.portalY;
-            this.player2.setPosition(randomPortal.x + 50, randomPortal.y);
-        }
-        if ((bodyA === this.player2.body && bodyB === this.portalY.body) ||
-            (bodyB === this.player2.body && bodyA === this.portalY.body)) {
-            this.player2.setPosition(this.portalX.x - 50, this.portalX.y);
-        }
-    }
-    
-    
-    
-
-    handleCollisionEnd(event, bodyA, bodyB) {
-        if ((bodyA === this.player1.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
-            (bodyB === this.player1.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
-            this.onGroundPlayer1 = false;
-        }
-        if ((bodyA === this.player2.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
-            (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
-            this.onGroundPlayer2 = false;
-        }
+    handleCollisionActive(event) {
+        event.pairs.forEach(pair => {
+            const { bodyA, bodyB } = pair;
+            if ((bodyA === this.player1.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
+                (bodyB === this.player1.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
+                this.onGroundPlayer1 = true;
+            }
+            if ((bodyA === this.player2.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
+                (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
+                this.onGroundPlayer2 = true;
+            }
+        });
     }
 
-    teleportPlayers(destination, offsetX, offsetY) {
-        this.player1.setPosition(destination.x + offsetX, destination.y + offsetY);
-        this.player2.setPosition(destination.x + offsetX, destination.y + offsetY);
-    }
-
-    applyForces(distance) {
-        const forceMagnitude = 0.00004;
-        if (this.onGroundPlayer1 && !this.onGroundPlayer2) {
-            const forceX = (this.player1.x - this.player2.x) * forceMagnitude;
-            const forceY = (this.player1.y - this.player2.y) * forceMagnitude;
-            this.player2.applyForce({ x: forceX, y: forceY });
-        } else if (this.onGroundPlayer2 && !this.onGroundPlayer1) {
-            const forceX = (this.player2.x - this.player1.x) * forceMagnitude;
-            const forceY = (this.player2.y - this.player1.y) * forceMagnitude;
-            this.player1.applyForce({ x: forceX, y: forceY });
-        } else {
-            const forceX = (this.player2.x - this.player1.x) * forceMagnitude;
-            const forceY = (this.player2.y - this.player1.y) * forceMagnitude;
-            this.player1.applyForce({ x: forceX, y: forceY });
-            this.player2.applyForce({ x: -forceX, y: -forceY });
-        }
+    handleCollisionEnd(event) {
+        event.pairs.forEach(pair => {
+            const { bodyA, bodyB } = pair;
+            if ((bodyA === this.player1.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
+                (bodyB === this.player1.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
+                this.onGroundPlayer1 = false;
+            }
+            if ((bodyA === this.player2.body && (bodyB === this.ground.body || this.topColliders.includes(bodyB))) ||
+                (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
+                this.onGroundPlayer2 = false;
+            }
+        });
     }
 
     handlePlayerMovement() {
@@ -351,13 +322,70 @@ class GameScene extends Phaser.Scene {
 
         if (Phaser.Input.Keyboard.JustDown(this.teclas.W) && this.onGroundPlayer1) {
             this.player1.setVelocityY(this.jumpForce);
-            this.onGroundPlayer1 = false;
+            this.onGroundPlayer1 = false; // O jogador não está mais no chão
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.cursors.up) && this.onGroundPlayer2) {
             this.player2.setVelocityY(this.jumpForce);
-            this.onGroundPlayer2 = false;
+            this.onGroundPlayer2 = false; // O jogador não está mais no chão
         }
+
+        // Verificar se o jogador 1 quer agarrar a parede
+        if (Phaser.Input.Keyboard.JustDown(this.teclas.E)) {
+            if (this.isNearWall(this.player1)) {
+                this.grabbingPlayer1 = !this.grabbingPlayer1;
+                if (this.grabbingPlayer1) {
+                    this.player1.setStatic(true);
+                } else {
+                    this.player1.setStatic(false);
+                }
+            }
+        }
+
+        // Verificar se o jogador 2 quer agarrar a parede
+        if (Phaser.Input.Keyboard.JustDown(this.cursors.shift)) {
+            if (this.isNearWall(this.player2)) {
+                this.grabbingPlayer2 = !this.grabbingPlayer2;
+                if (this.grabbingPlayer2) {
+                    this.player2.setStatic(true);
+                } else {
+                    this.player2.setStatic(false);
+                }
+            }
+        }
+    }
+
+    applyForces(distance) {
+        let forceMagnitude = 0.00004;
+        
+        if (distance >= 300) {
+            forceMagnitude *= 10;
+        }
+
+        if (this.onGroundPlayer1 && !this.onGroundPlayer2) {
+            const forceX = (this.player1.x - this.player2.x) * forceMagnitude;
+            const forceY = (this.player1.y - this.player2.y) * forceMagnitude;
+            this.player2.applyForce({ x: forceX, y: forceY });
+        } else if (this.onGroundPlayer2 && !this.onGroundPlayer1) {
+            const forceX = (this.player2.x - this.player1.x) * forceMagnitude;
+            const forceY = (this.player2.y - this.player1.y) * forceMagnitude;
+            this.player1.applyForce({ x: forceX, y: forceY });
+        } else {
+            const forceX = (this.player2.x - this.player1.x) * forceMagnitude;
+            const forceY = (this.player2.y - this.player1.y) * forceMagnitude;
+            this.player1.applyForce({ x: forceX, y: forceY });
+            this.player2.applyForce({ x: -forceX, y: -forceY });
+        }
+    }
+
+    isNearWall(player) {
+        for (let wall of this.walls) {
+            const distance = Phaser.Math.Distance.Between(player.x, player.y, wall.x, wall.y);
+            if (distance < this.grabDistance) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
