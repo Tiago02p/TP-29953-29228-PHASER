@@ -240,7 +240,7 @@ class GameScene extends Phaser.Scene {
 
     update() {
         this.corda.clear();
-        this.corda.lineStyle(2, 0xff0000);
+        this.corda.lineStyle(2, 0xB45F06);
         this.corda.beginPath();
         this.corda.moveTo(this.player1.x, this.player1.y);
         this.corda.lineTo(this.player2.x, this.player2.y);
@@ -272,8 +272,32 @@ class GameScene extends Phaser.Scene {
                 (bodyB === this.player2.body && (bodyA === this.ground.body || this.topColliders.includes(bodyA)))) {
                 this.onGroundPlayer2 = true;
             }
+    
+            // Verificação de colisão com portal X
+            if ((bodyA === this.player1.body && bodyB === this.portalX.body) ||
+                (bodyB === this.player1.body && bodyA === this.portalX.body) ||
+                (bodyA === this.player2.body && bodyB === this.portalX.body) ||
+                (bodyB === this.player2.body && bodyA === this.portalX.body)) {
+                this.teleportPlayers(this.portalY, 45, 0); // Teletransportar para a posição à direita do portal Y
+            }
+    
+            // Verificação de colisão com portal Y
+            if ((bodyA === this.player1.body && bodyB === this.portalY.body) ||
+                (bodyB === this.player1.body && bodyA === this.portalY.body) ||
+                (bodyA === this.player2.body && bodyB === this.portalY.body) ||
+                (bodyB === this.player2.body && bodyA === this.portalY.body)) {
+                this.teleportPlayers(this.portalX, -10, 0); // Teletransportar para a posição à esquerda do portal X
+            }
         });
     }
+    
+    teleportPlayers(destination, offsetX, offsetY) {
+        this.player1.setPosition(destination.x + offsetX, destination.y + offsetY);
+        this.player2.setPosition(destination.x + offsetX, destination.y + offsetY);
+    }
+    
+    
+    
 
     handleCollisionEnd(event) {
         event.pairs.forEach(pair => {
