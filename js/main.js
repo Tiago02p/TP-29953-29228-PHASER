@@ -494,10 +494,10 @@ function loadportals2(scene) {
         { x: 2950, y: scene.groundY - 2470 },
 
         //Portal Vitoria Falsa 2
-        { x: 1500, y: scene.groundY - 2700 },
+        { x: 1500, y: scene.groundY - 2600 },
 
         //Portal Vitoria
-        { x: 1100, y: scene.groundY - 2700 },
+        { x: 1100, y: scene.groundY - 2600 },
 
         //Portal Vitoria Falsa 3
         { x: 200, y: scene.groundY - 2500 }
@@ -511,19 +511,19 @@ function loadportals2(scene) {
 
         // Salvar referências aos portais de vitória e perda
         if (pos.x === 2950 && pos.y === scene.groundY - 2470) {
-            scene.add.text(pos.x - 80, pos.y - 100, 'FREE CAKE!', { font: '50px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x - 80, pos.y - 100, 'FREE CAKE!', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose1 = portal;
         }
-        if (pos.x === 1400 && pos.y === scene.groundY - 2700) {
-            scene.add.text(pos.x, pos.y + 50, 'FINISH HERE', { font: '50px Amatic-Bold', fill: '#FFF' });
+        if (pos.x === 1500 && pos.y === scene.groundY - 2600) {
+            scene.add.text(pos.x - 70, pos.y - 100, 'FINISH HERE', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose2 = portal;
         }
-        if (pos.x === 1100 && pos.y === scene.groundY - 2700) {
-            scene.add.text(pos.x, pos.y + 50, 'THE END', { font: '50px Amatic-Bold', fill: '#FFF' });
+        if (pos.x === 1100 && pos.y === scene.groundY - 2600) {
+            scene.add.text(pos.x - 60, pos.y - 100, 'THE END', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalWin = portal;
         }
-        if (pos.x === 800 && pos.y === scene.groundY - 2700) {
-            scene.add.text(pos.x, pos.y + 50, 'END?', { font: '50px Amatic-Bold', fill: '#FFF' });
+        if (pos.x === 200 && pos.y === scene.groundY - 2500) {
+            scene.add.text(pos.x - 80, pos.y - 100, 'END?', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose3 = portal;
         }
     });
@@ -588,7 +588,6 @@ function loadbloco_espacos(scene) {
         { x: 1400, y: scene.groundY - 2250 },
 
         { x: 600, y: scene.groundY - 2250 },
-        { x: 200, y: scene.groundY - 2350 },
     ];
 
     bloco_espacoPositions.forEach(pos => {
