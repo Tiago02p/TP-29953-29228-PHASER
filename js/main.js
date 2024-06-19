@@ -288,13 +288,23 @@ class GameScene extends Phaser.Scene {
                 (bodyB === this.player2.body && bodyA === this.portalY.body)) {
                 this.teleportPlayers(this.portalX, -10, 0); // Teletransportar para a posição à esquerda do portal X
             }
+    
+            // Verificação de colisão com portais de derrota
+            if ((bodyA === this.player1.body && (bodyB === this.portalLose1.body || bodyB === this.portalLose2.body || bodyB === this.portalLose3.body)) ||
+                (bodyB === this.player1.body && (bodyA === this.portalLose1.body || bodyA === this.portalLose2.body || bodyA === this.portalLose3.body)) ||
+                (bodyA === this.player2.body && (bodyB === this.portalLose1.body || bodyB === this.portalLose2.body || bodyB === this.portalLose3.body)) ||
+                (bodyB === this.player2.body && (bodyA === this.portalLose1.body || bodyA === this.portalLose2.body || bodyA === this.portalLose3.body))) {
+                this.teleportPlayers({ x: 300, y: 500 }, 0, 0); // Teletransportar para a posição inicial
+            }
         });
     }
+    
     
     teleportPlayers(destination, offsetX, offsetY) {
         this.player1.setPosition(destination.x + offsetX, destination.y + offsetY);
         this.player2.setPosition(destination.x + offsetX, destination.y + offsetY);
     }
+    
     
     
     
@@ -576,7 +586,7 @@ function loadbloco_espacos(scene) {
 
         //caminho certo
         { x: 1900, y: scene.groundY - 2050 },
-        { x: 1600, y: scene.groundY - 2170 },
+        { x: 1600, y: scene.groundY - 2250 },
 
         { x: 100, y: scene.groundY - 1950},
 
@@ -619,9 +629,12 @@ function loadblocos_fantasmas(scene) {
         } else {
             scene.add.text(pos.x + 200, pos.y - 150, 'DO YOU GUYS', { font: '100px Amatic-Bold', fill: '#FFF' });
             scene.add.text(pos.x + 200, pos.y - 50, 'REALLY WANT IT?', { font: '100px Amatic-Bold', fill: '#FFF' });
-            scene.add.text(pos.x - 300, pos.y + 1350, 'JUMP TOGETHER', { font: '50px Amatic-Bold', fill: '#FFF' });
-            scene.add.text(pos.x + 800, pos.y + 900, 'OOOOOOOOOOO', { font: '50px Amatic-Bold', fill: '#FFF' });
-            scene.add.text(pos.x + 1500, pos.y - 700, 'OOOOOOOOOOO', { font: '50px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 300, pos.y + 1350, 'TRY JUMPING', { font: '80px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 335, pos.y + 1450, 'TOGETHER', { font: '80px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 700, pos.y + 900, 'FORCE THE ROPE DOWN', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 800, pos.y + 1000, 'TO SLINGSHOT', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 1500, pos.y - 700, 'YOU FINALLY', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 1500, pos.y - 600, 'ARRIVED HERE', { font: '100px Amatic-Bold', fill: '#FFF' });
         }
     });
 }
