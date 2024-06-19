@@ -568,7 +568,7 @@ function loadbloco_espacos(scene) {
     ];
 
     bloco_espacoPositions.forEach(pos => {
-      let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.5);
+      let bloco_espaco = scene.matter.add.image(pos.x, pos.y, 'bloco_espaco').setScale(0.3);
             bloco_espaco.setStatic(true);
             scene.bloco_espacos.push(bloco_espaco);
 
