@@ -619,6 +619,9 @@ function loadblocos_fantasmas(scene) {
         } else {
             scene.add.text(pos.x + 200, pos.y - 150, 'DO YOU GUYS', { font: '100px Amatic-Bold', fill: '#FFF' });
             scene.add.text(pos.x + 200, pos.y - 50, 'REALLY WANT IT?', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x - 300, pos.y + 1350, 'JUMP TOGETHER', { font: '50px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 800, pos.y + 900, 'OOOOOOOOOOO', { font: '50px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 1500, pos.y - 700, 'OOOOOOOOOOO', { font: '50px Amatic-Bold', fill: '#FFF' });
         }
     });
 }
