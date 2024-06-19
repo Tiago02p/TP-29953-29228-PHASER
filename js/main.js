@@ -127,7 +127,7 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('Portal', 'assets/Portal/Portal.png', { frameWidth: 100, frameHeight: 100 });
         this.load.spritesheet('Portal2', 'assets/Portal/Portal2.png', { frameWidth: 100, frameHeight: 100 });
         this.load.audio('backgroundMusic', 'assets/audio/song.mp3'); // Carregar a música de fundo
-        this.load.image('wall', 'assets/background/wall.jpg');
+        this.load.image('wall', 'assets/background/wallceu.jpg');
     }
 
     create() {
@@ -219,6 +219,10 @@ class GameScene extends Phaser.Scene {
         // Adicionar novas paredes
         const wallPositions = [
             { x: 1200, y: this.groundY - 1400 },
+            { x: 2100, y: this.groundY - 1700 },
+            { x: 2350, y: this.groundY - 1700 },
+            { x: 2600, y: this.groundY - 1700 },
+            { x: 2770, y: this.groundY - 1870 },
         ];
 
         wallPositions.forEach(pos => {
@@ -226,8 +230,8 @@ class GameScene extends Phaser.Scene {
             this.walls.push(wall);
         });
 
-        this.cameras.main.setBounds(0, this.game.config.height - 8000, 3000, 8000);
-        this.matter.world.setBounds(0, this.game.config.height - 8000, 3000, 8000);
+        this.cameras.main.setBounds(0, this.game.config.height - 2600, 3000, 8000);
+        this.matter.world.setBounds(0, this.game.config.height - 2600, 3000, 8000);
         this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
 
         this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
@@ -518,9 +522,6 @@ function loadbloco_ceus(scene) {
         { x: 1100, y: scene.groundY - 1650 },
         { x: 1400, y: scene.groundY - 1800 },
         { x: 1700, y: scene.groundY - 1600 },
-        { x: 2100, y: scene.groundY - 1700 },
-        { x: 2900, y: scene.groundY - 1500 },
-        { x: 2600, y: scene.groundY - 1750 },
 
     ];
 
@@ -540,7 +541,7 @@ function loadbloco_ceus(scene) {
 function loadbloco_espacos(scene) {
     const bloco_espacoPositions = [
         //Posições dos obstaculos pretos
-        { x: 2900, y: scene.groundY - 2000 },
+        { x: 2950, y: scene.groundY - 1900 },
         { x: 2550, y: scene.groundY - 2050 },
 
         //Decidir
