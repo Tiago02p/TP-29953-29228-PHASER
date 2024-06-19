@@ -525,7 +525,7 @@ function loadbloco_ceus(scene) {
     ];
 
     bloco_ceuPositions.forEach(pos => {
-        let bloco_ceu = scene.matter.add.image(pos.x, pos.y, 'bloco_ceu').setScale(0.5);
+        let bloco_ceu = scene.matter.add.image(pos.x, pos.y, 'bloco_ceu').setScale(2.3);
         bloco_ceu.setStatic(true);
         scene.bloco_ceus.push(bloco_ceu);
 
@@ -582,11 +582,11 @@ function loadbloco_espacos(scene) {
 function loadblocos_fantasmas(scene) {
     const bloco_fantasmaPositions = [
         { x: 2600, y: scene.groundY - 1300, image: 'bloco_deserto' },
-        { x: 400, y: scene.groundY - 1850, image: 'bloco_ceu' }
+        { x: 400, y: scene.groundY - 1850, image: 'bloco_ceu', scale: 2.3 }
     ];
 
     bloco_fantasmaPositions.forEach(pos => {
-        let bloco_fantasma = scene.add.image(pos.x, pos.y, pos.image).setScale(0.5);
+        let bloco_fantasma = scene.add.image(pos.x, pos.y, pos.image).setScale(pos.scale);
         if (pos.x === 2600 && pos.y === scene.groundY - 1300) {
             scene.bloco_fantasma = bloco_fantasma; // Adicione esta linha
             scene.add.text(pos.x - 400, pos.y - 150, 'YES U CAN,', { font: '100px Amatic-Bold', fill: '#FFF' });
