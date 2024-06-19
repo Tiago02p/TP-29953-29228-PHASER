@@ -393,9 +393,7 @@ function loadbloco_desertos(scene) {
 
     bloco_desertoPositions.forEach(pos => {
         if (pos.x === 2600 && pos.y === scene.groundY - 1300) {
-            // Adicionando bloco fantasma
             scene.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
-            scene.add.text(pos.x - 20, pos.y - 50, 'JUMP HERE', { fontSize: '20px', fill: '#FFF' });
         } else {
             let bloco_deserto = scene.matter.add.image(pos.x, pos.y, 'bloco_deserto').setScale(0.5);
             bloco_deserto.setStatic(true);
@@ -457,15 +455,19 @@ function loadportals2(scene) {
 
         // Salvar referências aos portais de vitória e perda
         if (pos.x === 2950 && pos.y === scene.groundY - 2470) {
+            scene.add.text(pos.x - 80, pos.y - 100, 'FREE CAKE!', { font: '50px Amatic-Bold', fill: '#FFF' });
             scene.portalLose1 = portal;
         }
         if (pos.x === 1400 && pos.y === scene.groundY - 2700) {
+            scene.add.text(pos.x, pos.y + 50, 'FINISH HERE', { font: '50px Amatic-Bold', fill: '#FFF' });
             scene.portalLose2 = portal;
         }
         if (pos.x === 1100 && pos.y === scene.groundY - 2700) {
+            scene.add.text(pos.x, pos.y + 50, 'THE END', { font: '50px Amatic-Bold', fill: '#FFF' });
             scene.portalWin = portal;
         }
         if (pos.x === 800 && pos.y === scene.groundY - 2700) {
+            scene.add.text(pos.x, pos.y + 50, 'END?', { font: '50px Amatic-Bold', fill: '#FFF' });
             scene.portalLose3 = portal;
         }
     });
@@ -523,6 +525,8 @@ function loadbloco_espacos(scene) {
         { x: 1900, y: scene.groundY - 2050 },
         { x: 1600, y: scene.groundY - 2170 },
 
+        { x: 100, y: scene.groundY - 1950},
+
         //Decidir2
         { x: 1200, y: scene.groundY - 2250 },
 
@@ -550,11 +554,19 @@ function loadbloco_espacos(scene) {
 function loadblocos_fantasmas(scene) {
     const bloco_fantasmaPositions = [
         { x: 2600, y: scene.groundY - 1300, image: 'bloco_deserto' },
-        { x: 100, y: scene.groundY - 1950, image: 'bloco_espaco' }
+        { x: 400, y: scene.groundY - 1850, image: 'bloco_ceu' }
     ];
 
     bloco_fantasmaPositions.forEach(pos => {
-        scene.add.image(pos.x, pos.y, pos.image).setScale(0.5);
-        scene.add.text(pos.x - 30, pos.y - 50, 'JUMP HERE', { fontSize: '20px', fill: '#FFF' });
+        let bloco_fantasma = scene.add.image(pos.x, pos.y, pos.image).setScale(0.5);
+        if (pos.x === 2600 && pos.y === scene.groundY - 1300) {
+            scene.bloco_fantasma = bloco_fantasma; // Adicione esta linha
+            scene.add.text(pos.x - 400, pos.y - 150, 'YES U CAN,', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x - 400, pos.y - 50, 'JUST DO IT', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 100, pos.y - 50, 'NOT THIS WAY', { font: '50px Amatic-Bold', fill: '#FFF' });
+        } else {
+            scene.add.text(pos.x + 200, pos.y - 150, 'DO YOU GUYS', { font: '100px Amatic-Bold', fill: '#FFF' });
+            scene.add.text(pos.x + 200, pos.y - 50, 'REALLY WANT IT?', { font: '100px Amatic-Bold', fill: '#FFF' });
+        }
     });
 }
