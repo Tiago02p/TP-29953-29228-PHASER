@@ -476,8 +476,8 @@ function loadportals(scene) {
 function loadportals2(scene) {
     const portalPositions = [
         { x: 2950, y: scene.groundY - 2470 },
-        { x: 1500, y: scene.groundY - 2600 },
-        { x: 1100, y: scene.groundY - 2600 },
+        { x: 1500, y: scene.groundY - 2500 },
+        { x: 1100, y: scene.groundY - 2500 },
         { x: 200, y: scene.groundY - 2500 }
     ];
 
@@ -492,7 +492,7 @@ function loadportals2(scene) {
             scene.add.text(pos.x - 80, pos.y - 100, 'FREE CAKE!', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose1 = portal;
         }
-        if (pos.x === 1500 && pos.y === scene.groundY - 2600) {
+        if (pos.x === 1500 && pos.y === scene.groundY - 2500) {
             scene.add.text(pos.x - 70, pos.y - 100, 'FINISH HERE', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose2 = portal;
         }
@@ -500,7 +500,7 @@ function loadportals2(scene) {
             scene.add.text(pos.x - 60, pos.y - 100, 'END?', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalLose3 = portal;
         }
-        if (pos.x === 1100 && pos.y === scene.groundY - 2600) {
+        if (pos.x === 1100 && pos.y === scene.groundY - 2500) {
             scene.add.text(pos.x - 80, pos.y - 100, 'THE END', { font: '50px Amatic-Bold', fill: '#f1c232' });
             scene.portalWin = portal;
         }

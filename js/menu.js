@@ -62,6 +62,19 @@ export default class MenuScene extends Phaser.Scene {
 
         // Adiciona os eventos de clique
         playButton.on('pointerdown', () => {
+            this.scene.start('TutorialScene');
+            const timer = this.time.addEvent({
+                delay: 100,
+                callback: () => {
+                    typingText.text += errorMessage[i++];
+                    if (i === errorMessage.length) {
+                        timer.remove();
+                        this.showButtons();
+                    }
+                },
+                loop: true
+            });
+            this.scene.stop('TutorialScene');
             this.scene.start('GameScene');
         });
 
