@@ -27,7 +27,7 @@
             align-items: center;
             height: 100vh;
         }
-        #menu, #tutorial, #gameContainer {
+        #menu, #tutorial, #gameContainer, #winscene {
             display: none;
             text-align: center;
             position: absolute;
@@ -42,7 +42,7 @@
         #menu.active, #tutorial.active, #gameContainer.active {
             display: flex;
         }
-        #menu, #tutorial {
+        #menu, #tutorial, #winscene {
             background-image: url('assets/background/menuBg.jpg');
             background-size: cover;
             background-position: center;
@@ -167,6 +167,9 @@
             </div>
         </div>
         <button id="backToMenuButton" class="margin-bottom">Back to Menu</button>
+    </div>
+    <div id="winscene">
+        <button id="backToMenuButtonWinscene" class="margin-bottom">Back to Menu</button>
     </div>
 </body>
 </html>

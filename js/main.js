@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quitButton = document.getElementById('quitButton');
     const tutorialButton = document.getElementById('tutorialButton');
     const backToMenuButton = document.getElementById('backToMenuButton');
+    const backToMenuButtonWinscene = document.getElementById('backToMenuButtonWinscene');
     const backToMenuButtonGame = document.getElementById('backToMenuButtonGame');
 
     const menu = document.getElementById('menu');
@@ -57,6 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     backToMenuButtonGame.addEventListener('click', () => {
+        showSection(menu);
+        game.scene.stop('GameScene');
+        game.scene.start('MenuScene');
+    });
+
+    backToMenuButtonWinscene.addEventListener('click', () => {
         showSection(menu);
         game.scene.stop('GameScene');
         game.scene.start('MenuScene');
@@ -537,11 +544,11 @@ function loadportals2(scene) {
         }
         if (pos.x === 200 && pos.y === scene.groundY - 2500) {
             scene.add.text(pos.x - 60, pos.y - 100, 'END?', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalLose3 = portal;
+            scene.portalWin = portal;
         }
         if (pos.x === 1100 && pos.y === scene.groundY - 2600) {
             scene.add.text(pos.x - 80, pos.y - 100, 'THE END', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalWin = portal;
+            scene.portalLose3 = portal;
         }
     });
 }
