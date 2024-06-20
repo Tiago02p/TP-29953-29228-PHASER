@@ -138,15 +138,77 @@ export default class GameScene extends Phaser.Scene {
         });
 
         this.cameras.main.setBounds(0, this.game.config.height - 2600, 3000, 8000);
-        this.matter.world.setBounds(0, this.game.config.height - 2600, 3000, 8000);
-        this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
+    this.matter.world.setBounds(0, this.game.config.height - 2600, 3000, 8000);
+    this.cameras.main.startFollow(this.player1, true, 0.05, 0.05);
 
-        this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
-        this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
+    this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
+    this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
 
-        const portals = [this.portalLose1, this.portalLose2, this.portalLose3, this.portalWin];
-        this.portalWin = Phaser.Math.RND.pick(portals);
-    }
+    const portals = [this.portalLose1, this.portalLose2, this.portalLose3, this.portalWin];
+    this.portalWin = Phaser.Math.RND.pick(portals);
+
+    // Adiciona o botão "Back"
+    const backButtonStyle = {
+        fontSize: '24px',
+        fill: '#FFF',
+        fontFamily: 'AmaticSC-Regular',
+        backgroundColor: '#00056d',
+        padding: {
+            x: 10,
+            y: 5
+        }
+    };
+
+    const backButton = this.add.text(60, 40, 'Back', backButtonStyle).setOrigin(0.5).setInteractive();
+    
+    // Adiciona um retângulo arredondado atrás do texto do botão
+    const backButtonGraphics = this.add.graphics();
+    backButtonGraphics.fillStyle(0x00056d, 1);
+    backButtonGraphics.fillRoundedRect(
+        backButton.x - backButton.width / 2 - 10,
+        backButton.y - backButton.height / 2 - 5,
+        backButton.width + 20,
+        backButton.height + 10,
+        15 // Maior arredondamento das bordas
+    );
+    backButton.setDepth(1); // Garante que o texto esteja acima do gráfico
+    backButtonGraphics.setScrollFactor(0); // Garante que o gráfico não se mova com a câmera
+    backButton.setScrollFactor(0); // Garante que o texto do botão não se mova com a câmera
+
+    // Adiciona eventos de clique
+    backButton.on('pointerdown', () => {
+        this.scene.start('MenuScene');
+    });
+
+    // Adiciona efeitos de hover nos botões
+    backButton.on('pointerover', () => {
+        backButton.setStyle({ fill: '#000', backgroundColor: '#ffea00' });
+        backButtonGraphics.clear();
+        backButtonGraphics.fillStyle(0xffea00, 1).fillRoundedRect(
+            backButton.x - backButton.width / 2 - 10,
+            backButton.y - backButton.height / 2 - 5,
+            backButton.width + 20,
+            backButton.height + 10,
+            15
+        );
+    });
+    backButton.on('pointerout', () => {
+        backButton.setStyle(backButtonStyle);
+        backButtonGraphics.clear();
+        backButtonGraphics.fillStyle(0x00056d, 1).fillRoundedRect(
+            backButton.x - backButton.width / 2 - 10,
+            backButton.y - backButton.height / 2 - 5,
+            backButton.width + 20,
+            backButton.height + 10,
+            15
+        );
+    });
+
+    // Adiciona o botão e seu gráfico a um contêiner fixo
+    this.fixedUIContainer = this.add.container(0, 0);
+    this.fixedUIContainer.setScrollFactor(0);
+    this.fixedUIContainer.add([backButtonGraphics, backButton]);
+}
 
     update() {
         this.corda.clear();
