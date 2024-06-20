@@ -12,10 +12,10 @@ export default class GameScene extends Phaser.Scene {
         this.backgroundTransition = null;
         this.portalX = null;
         this.portalY = null;
-        this.portalLose1 = null;
-        this.portalLose2 = null;
-        this.portalLose3 = null;
-        this.portalWin = null;
+        this.portalFinal1 = null;
+        this.portalFinal2 = null;
+        this.portalFinal3 = null;
+        this.portalFinal4 = null;
         this.grabbingPlayer1 = false;
         this.grabbingPlayer2 = false;
     }
@@ -144,8 +144,8 @@ export default class GameScene extends Phaser.Scene {
     this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
     this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
 
-    const portals = [this.portalLose1, this.portalLose2, this.portalLose3, this.portalWin];
-    this.portalWin = Phaser.Math.RND.pick(portals);
+    const portals = [this.portalFinal1, this.portalFinal2, this.portalFinal3, this.portalFinal4];
+    this.portalWinner = Phaser.Math.RND.pick(portals);
 
     // Adiciona o botão "Back"
     const backButtonStyle = {
@@ -262,19 +262,18 @@ export default class GameScene extends Phaser.Scene {
             }
 
             // Verificação de colisão com portal de vitória
-            if ((bodyA === this.player1.body && bodyB === this.portalWin.body) ||
-                (bodyB === this.player1.body && bodyA === this.portalWin.body) ||
-                (bodyA === this.player2.body && bodyB === this.portalWin.body) ||
-                (bodyB === this.player2.body && bodyA === this.portalWin.body)) {
+            if ((bodyA === this.player1.body && bodyB === this.portalWinner.body) ||
+                (bodyB === this.player1.body && bodyA === this.portalWinner.body) ||
+                (bodyA === this.player2.body && bodyB === this.portalWinner.body) ||
+                (bodyB === this.player2.body && bodyA === this.portalWinner.body)) {
                 this.scene.start('WinScene'); // Inicia a cena de vitória
-            }
-
-            // Verificação de colisão com portais de perda
-            if ((bodyA === this.player1.body && (bodyB === this.portalLose1.body || bodyB === this.portalLose2.body || bodyB === this.portalLose3.body)) ||
-                (bodyB === this.player1.body && (bodyA === this.portalLose1.body || bodyA === this.portalLose2.body || bodyA === this.portalLose3.body)) ||
-                (bodyA === this.player2.body && (bodyB === this.portalLose1.body || bodyB === this.portalLose2.body || bodyB === this.portalLose3.body)) ||
-                (bodyB === this.player2.body && (bodyA === this.portalLose1.body || bodyA === this.portalLose2.body || bodyA === this.portalLose3.body))) {
+            }else{
+                if ((bodyA === this.player1.body && (bodyB === this.portalFinal1.body || bodyB === this.portalFinal2.body || bodyB === this.portalFinal3.body) || bodyB === this.portalFinal4.body ) ||
+                (bodyB === this.player1.body && (bodyA === this.portalFinal1.body || bodyA === this.portalFinal2.body || bodyA === this.portalFinal3.body || bodyA === this.portalFinal4.body)) ||
+                (bodyA === this.player2.body && (bodyB === this.portalFinal1.body || bodyB === this.portalFinal2.body || bodyB === this.portalFinal3.body || bodyB === this.portalFinal4.body)) ||
+                (bodyB === this.player2.body && (bodyA === this.portalFinal1.body || bodyA === this.portalFinal2.body || bodyA === this.portalFinal3.body || bodyA === this.portalFinal3.body))) {
                 this.teleportPlayers({ x: 300, y: 500 }, 0, 0); // Teletransportar para a posição inicial
+            }
             }
         });
     }
@@ -490,19 +489,19 @@ function loadportals2(scene) {
         // Salvar referências aos portais de vitória e perda
         if (pos.x === 2950 && pos.y === scene.groundY - 2470) {
             scene.add.text(pos.x - 80, pos.y - 100, 'FREE CAKE!', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalLose1 = portal;
+            scene.portalFinal1 = portal;
         }
         if (pos.x === 1500 && pos.y === scene.groundY - 2500) {
             scene.add.text(pos.x - 70, pos.y - 100, 'FINISH HERE', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalLose2 = portal;
+            scene.portalFinal2 = portal;
         }
         if (pos.x === 200 && pos.y === scene.groundY - 2500) {
             scene.add.text(pos.x - 60, pos.y - 100, 'END?', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalLose3 = portal;
+            scene.portalFinal3 = portal;
         }
         if (pos.x === 1100 && pos.y === scene.groundY - 2500) {
             scene.add.text(pos.x - 80, pos.y - 100, 'THE END', { font: '50px Amatic-Bold', fill: '#f1c232' });
-            scene.portalWin = portal;
+            scene.portalFinal4 = portal;
         }
     });
 }
