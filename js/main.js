@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backToMenuButtonGame.addEventListener('click', () => {
         showSection(menu);
         game.scene.stop('GameScene');
+        game.scene.stop('WinScene');
         game.scene.start('MenuScene');
     });
 });
@@ -89,6 +90,56 @@ class TutorialScene extends Phaser.Scene {
         });
     }
 }
+
+class WinScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'WinScene' });
+    }
+
+    preload() {
+        this.load.image('fundotrofeu', 'assets/background/fundotrofeu.jpg');
+        this.load.image('trofeu', 'assets/background/trofeu.png');
+    }
+
+    create() {
+        this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'fundotrofeu').setOrigin(0.5).setScale(0.75);
+
+        const congratulationsText = 
+            `Fiquei surpreendido com vocês! Ah, quanto ao prêmio? Uma merecida pausa para descansar os dedos e um troféu virtual (que como é óbvio, vocês não podem tocar nem levar, mas a intenção é o que conta, não é?).`;
+
+        const textStyle = { font: '70px Amatic-Bold', fill: '#fff', wordWrap: { width: this.cameras.main.width - 200 } };
+        const displayText = this.add.text(100, 50, '', textStyle);
+
+        this.typeText(displayText, congratulationsText, 50, () => {
+            console.log('Texto completo! Adicionando troféu...');
+            // Adicionar a imagem do troféu abaixo do texto após a digitação terminar
+            this.add.image(500, 500, 'trofeu').setOrigin(0.5).setScale(10);
+        });
+    }
+
+    typeText(displayText, fullText, delay, onComplete) {
+        let currentIndex = 0;
+        const timer = this.time.addEvent({
+            delay: delay,
+            callback: () => {
+                if (currentIndex < fullText.length) {
+                    displayText.setText(fullText.substring(0, currentIndex + 1));
+                    currentIndex++;
+                } else {
+                    timer.remove(false);
+                    if (onComplete) {
+                        onComplete();
+                    }
+                }
+            },
+            repeat: fullText.length - 1
+        });
+    }
+}
+
+
+
+
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -236,6 +287,9 @@ class GameScene extends Phaser.Scene {
 
         this.matter.world.on('collisionactive', this.handleCollisionActive.bind(this));
         this.matter.world.on('collisionend', this.handleCollisionEnd.bind(this));
+
+        const portals = [this.portalLose1, this.portalLose2, this.portalLose3, this.portalWin];
+        this.portalWin = Phaser.Math.RND.pick(portals);
     }
 
     update() {
@@ -430,17 +484,6 @@ class GameScene extends Phaser.Scene {
     }
 }
 
-class WinScene extends Phaser.Scene {
-    constructor() {
-        super({ key: 'WinScene' });
-    }
-
-    create() {
-        this.cameras.main.setBackgroundColor('#FFFFFF'); // Define o fundo branco
-        this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'EZ WIN', { fontSize: '64px', fill: '#000' }).setOrigin(0.5);
-    }
-}
-
 function loadbloco_desertos(scene) {
     const bloco_desertoPositions = [
         { x: 500, y: scene.groundY - 400 },
@@ -511,7 +554,6 @@ function loadportals(scene) {
         }
     });
 }
-
 function loadportals2(scene) {
     const portalPositions = [
         { x: 2950, y: scene.groundY - 2470 },
@@ -523,7 +565,7 @@ function loadportals2(scene) {
     portalPositions.forEach(pos => {
         let portal = scene.matter.add.sprite(pos.x, pos.y, 'Portal2').setScale(1);
         portal.play('Portal2');
-        portal.setStatic(true); // Tornar os portais estáticos
+        portal.setStatic(true); 
         scene.portals.push(portal);
 
         // Salvar referências aos portais de vitória e perda
